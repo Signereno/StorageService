@@ -1,5 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Configuration;
+using System.IO;
+using System.Runtime.Serialization;
 
 namespace Unipluss.Sign.StorageService.Server.Code
 {
@@ -37,4 +40,6 @@ namespace Unipluss.Sign.StorageService.Server.Code
             return path;
         }
     }
+
+   
 }

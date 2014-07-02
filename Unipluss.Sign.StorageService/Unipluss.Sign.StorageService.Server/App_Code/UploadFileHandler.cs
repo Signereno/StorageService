@@ -1,41 +1,16 @@
 ﻿using System;
+using System.Collections.Specialized;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Web;
 using Unipluss.Sign.StorageService.Server.Code;
 
 namespace Unipluss.Sign.StorageService.Server
 {
-    public class UploadFileHandler : IHttpAsyncHandler
+    public class UploadFileHandler : BaseAsyncHandler
     {
-        public void ProcessRequest(HttpContext context)
-        {
-            ServeContent(context);
-        }
-
-        public bool IsReusable { get { return false; }  }
-        #region IHttpAsyncHandler Members
-
-        private AsyncProcessorDelegate _Delegate;
-        protected delegate void AsyncProcessorDelegate(HttpContext context);
-
-        public IAsyncResult BeginProcessRequest(HttpContext context, AsyncCallback cb, object extraData)
-        {
-            _Delegate = new AsyncProcessorDelegate(ProcessRequest);
-            return _Delegate.BeginInvoke(context, cb, extraData);
-        }
-
-        public void EndProcessRequest(IAsyncResult result)
-        {
-            _Delegate.EndInvoke(result);
-        }
-
-        #endregion
-
-        /// <summary>
-        /// You only have to modify this method.
-        /// </summary>
-        private void ServeContent(HttpContext context)
+        protected override void ServeContent(HttpContext context)
         {
             if (AuthorizationHandler.VerifyIfRequestIsAuthed(context))
             {
@@ -54,13 +29,22 @@ namespace Unipluss.Sign.StorageService.Server
                 {
                     string path = string.Format(@"{0}{1}\{2}", AppSettingsReader.RootFolder, account,
                         key);
-                    if (
-                        System.IO.Directory.Exists(path))
+                    if (System.IO.Directory.Exists(path))
                     {
                         using (var ms = new MemoryStream())
                         {
                             context.Request.InputStream.CopyTo(ms);
                             File.WriteAllBytes(string.Format(@"{0}\{1}",path,filename),ms.ToArray());
+                            var metadata = context.Request.Headers;
+                            NameValueCollection filteredMetaData=new NameValueCollection();
+
+                            foreach (string metaKey in metadata.AllKeys.Where(x=>x.Contains("x-metadata-")))
+                            {
+                                filteredMetaData.Add(metaKey.Replace("x-metadata-",string.Empty),metadata[metaKey]);   
+                            }
+
+                            Extensions.Serialize(filteredMetaData, string.Format(@"{0}\{1}.metadata", path, Path.GetFileNameWithoutExtension(filename)));
+                          
                         }
                         context.Response.StatusCode = (int)HttpStatusCode.Created;
 

@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{80496E9E-83A2-45BC-99F3-E21BB821F439}</ProjectGuid>
+    <ProjectGuid>{978C4DFE-213B-4D75-B6D6-D2D4BEFDC849}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Unipluss.Sign.StorageService.Server</RootNamespace>
-    <AssemblyName>Unipluss.Sign.StorageService.Server</AssemblyName>
+    <RootNamespace>Unipluss.Sign.StorageService.Test</RootNamespace>
+    <AssemblyName>Unipluss.Sign.StorageService.Test</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -30,27 +30,39 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="nunit.framework">
+      <HintPath>..\packages\NUnit.2.6.3\lib\nunit.framework.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="App_Code\BaseAsyncHandler.cs" />
-    <Compile Include="App_Code\Code\AppSettingsReader.cs" />
-    <Compile Include="App_Code\Code\Hash.cs" />
-    <Compile Include="App_Code\Code\RandomStringGenerator.cs" />
-    <Compile Include="App_Code\DoesFileExistsHandler.cs" />
-    <Compile Include="App_Code\GetFileHandler.cs" />
-    <Compile Include="App_Code\UploadFileHandler.cs" />
-    <Compile Include="App_Code\DoesAccountExistHandler.cs" />
-    <Compile Include="App_Code\CreateAccountHandler.cs" />
-    <Compile Include="App_Code\Code\AuthorizationHandler.cs" />
+    <Compile Include="ClientTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
-    <None Include="web.config" />
+    <None Include="Hus budsjett.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="packages.config" />
+    <None Include="timestamptest.pdf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Unipluss.Sign.StorageService.Client\Unipluss.Sign.StorageService.Client.csproj">
+      <Project>{a2b3395b-7f67-478e-af55-841250e1e882}</Project>
+      <Name>Unipluss.Sign.StorageService.Client</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Unipluss.Sign.StorageService.Server\Unipluss.Sign.StorageService.Server.csproj">
+      <Project>{80496e9e-83a2-45bc-99f3-e21bb821f439}</Project>
+      <Name>Unipluss.Sign.StorageService.Server</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

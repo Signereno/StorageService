@@ -6,36 +6,14 @@ using Unipluss.Sign.StorageService.Server.Code;
 
 namespace Unipluss.Sign.StorageService.Server
 {
-    public class GetFileHandler : IHttpAsyncHandler
+    public class GetFileHandler : BaseAsyncHandler
     {
-        public void ProcessRequest(HttpContext context)
-        {
-            ServeContent(context);
-        }
-
-        public bool IsReusable { get { return false; }  }
-        #region IHttpAsyncHandler Members
-
-        private AsyncProcessorDelegate _Delegate;
-        protected delegate void AsyncProcessorDelegate(HttpContext context);
-
-        public IAsyncResult BeginProcessRequest(HttpContext context, AsyncCallback cb, object extraData)
-        {
-            _Delegate = new AsyncProcessorDelegate(ProcessRequest);
-            return _Delegate.BeginInvoke(context, cb, extraData);
-        }
-
-        public void EndProcessRequest(IAsyncResult result)
-        {
-            _Delegate.EndInvoke(result);
-        }
-
-        #endregion
+     
 
         /// <summary>
         /// You only have to modify this method.
         /// </summary>
-        private void ServeContent(HttpContext context)
+        protected override void ServeContent(HttpContext context)
         {
             if (AuthorizationHandler.VerifyIfRequestIsAuthed(context))
             {
@@ -54,11 +32,12 @@ namespace Unipluss.Sign.StorageService.Server
                 {
                     string path = string.Format(@"{0}{1}\{2}\{3}", AppSettingsReader.RootFolder, account,
                         key,filename);
-                    if (
-                        System.IO.Directory.Exists(path))
+                    if (System.IO.File.Exists(path))
                     {
-                           context.Response.TransmitFile(path);
-                        }
+                        AddMetaData(context, account, key, filename);
+
+                        context.Response.TransmitFile(path);
+                    }
                     else
                     {
                         if (System.IO.Directory.Exists(string.Format(@"{0}{1}", AppSettingsReader.RootFolder, account)))
@@ -89,6 +68,17 @@ namespace Unipluss.Sign.StorageService.Server
                     ;
                     context.Response.End();
                 }
+            }
+        }
+
+        private static void AddMetaData(HttpContext context, string account, string key, string filename)
+        {
+            var metapath = string.Format(@"{0}{1}\{2}\{3}.metadata", AppSettingsReader.RootFolder, account,
+                key, Path.GetFileNameWithoutExtension(filename));
+            var Metadata = Extensions.DeSerialize(metapath);
+            foreach (string headerKey in Metadata)
+            {
+                context.Response.Headers.Add(string.Format("x-metadata-{0}", headerKey), Metadata[headerKey]);
             }
         }
     }

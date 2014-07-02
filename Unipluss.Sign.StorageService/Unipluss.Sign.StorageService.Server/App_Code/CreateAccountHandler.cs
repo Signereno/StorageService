@@ -5,36 +5,10 @@ using Unipluss.Sign.StorageService.Server.Code;
 
 namespace Unipluss.Sign.StorageService.Server
 {
-    public class CreateAccountHandler : IHttpAsyncHandler
+    public class CreateAccountHandler : BaseAsyncHandler
     {
-        public void ProcessRequest(HttpContext context)
-        {
-            ServeContent(context);
-        }
-
-        public bool IsReusable { get { return false; }  }
-        #region IHttpAsyncHandler Members
-
-        private AsyncProcessorDelegate _Delegate;
-        protected delegate void AsyncProcessorDelegate(HttpContext context);
-
-        public IAsyncResult BeginProcessRequest(HttpContext context, AsyncCallback cb, object extraData)
-        {
-            _Delegate = new AsyncProcessorDelegate(ProcessRequest);
-            return _Delegate.BeginInvoke(context, cb, extraData);
-        }
-
-        public void EndProcessRequest(IAsyncResult result)
-        {
-            _Delegate.EndInvoke(result);
-        }
-
-        #endregion
-
-        /// <summary>
-        /// You only have to modify this method.
-        /// </summary>
-        private void ServeContent(HttpContext context)
+      
+        protected  override void ServeContent(HttpContext context)
         {
             if (AuthorizationHandler.VerifyIfRequestIsAuthed(context))
             {

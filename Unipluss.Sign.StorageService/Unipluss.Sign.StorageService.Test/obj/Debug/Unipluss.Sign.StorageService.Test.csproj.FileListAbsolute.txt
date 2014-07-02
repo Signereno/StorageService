@@ -1,0 +1,13 @@
+C:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.Test\bin\Debug\Hus budsjett.xlsx
+C:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.Test\bin\Debug\timestamptest.pdf
+C:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.Test\bin\Debug\Unipluss.Sign.StorageService.Test.dll
+C:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.Test\bin\Debug\Unipluss.Sign.StorageService.Test.pdb
+C:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.Test\bin\Debug\nunit.framework.dll
+C:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.Test\bin\Debug\Unipluss.Sign.StorageService.Client.dll
+C:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.Test\bin\Debug\Unipluss.Sign.StorageService.Server.dll
+C:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.Test\bin\Debug\Unipluss.Sign.StorageService.Client.pdb
+C:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.Test\bin\Debug\Unipluss.Sign.StorageService.Server.pdb
+C:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.Test\bin\Debug\nunit.framework.xml
+C:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.Test\obj\Debug\Unipluss.Sign.StorageService.Test.csprojResolveAssemblyReference.cache
+C:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.Test\obj\Debug\Unipluss.Sign.StorageService.Test.dll
+C:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.Test\obj\Debug\Unipluss.Sign.StorageService.Test.pdb
