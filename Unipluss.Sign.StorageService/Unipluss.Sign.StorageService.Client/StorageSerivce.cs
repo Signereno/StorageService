@@ -1,4 +1,6 @@
-﻿namespace Unipluss.Sign.StorageService.Client
+﻿using System.Net;
+
+namespace Unipluss.Sign.StorageService.Client
 {
     public class StorageSerivce
     {
@@ -20,6 +22,22 @@
             {
                 return true; // **** Always accept
             };
+        }
+
+        protected WebRequest CreateGetRequest(string url)
+        {
+            WebRequest request = WebRequest.Create(url);
+            request.AddSecurityToken(_securityToken);
+
+            return request;
+        }
+
+        protected WebRequest CreatePostRequest(string url)
+        {
+            WebRequest request = WebRequest.Create(url);
+            request.AddSecurityToken(_securityToken);
+            request.Method = "POST";
+            return request;
         }
 
 

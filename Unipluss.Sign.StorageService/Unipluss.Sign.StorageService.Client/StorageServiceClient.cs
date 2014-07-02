@@ -21,11 +21,7 @@ namespace Unipluss.Sign.StorageService.Client
         public bool UploadFile(byte[] data, string fileName, NameValueCollection metaData)
         {
             string url = string.Format("{0}File?ContainerName={1}&key={2}&filename={3}", _serviceUrl, _containerName, _secretKey, fileName);
-            WebRequest request = WebRequest.Create(url);
-            request.AddSecurityToken(_securityToken);
-            request.Method = "POST";
-            // If required by the server, set the credentials.
-            // Get the response.
+            WebRequest request = base.CreatePostRequest(url);
 
             // add post data to request
             using (Stream postStream = request.GetRequestStream())
@@ -35,6 +31,7 @@ namespace Unipluss.Sign.StorageService.Client
                 postStream.Close();
             }
 
+            //add metadata to header
             foreach (string key in metaData.AllKeys)
             {
                 var value = metaData[key];
@@ -54,10 +51,7 @@ namespace Unipluss.Sign.StorageService.Client
         public bool DoesFileExist(string fileName)
         {
             string url = string.Format("{0}File?ContainerName={1}&key={2}&filename={3}", _serviceUrl, _containerName,_secretKey,fileName);
-            WebRequest request = WebRequest.Create(url);
-            request.AddSecurityToken(_securityToken);
-            // If required by the server, set the credentials.
-            // Get the response.
+            WebRequest request = base.CreateGetRequest(url);
 
             HttpWebResponse response = (HttpWebResponse)request.GetResponse();
 
@@ -67,16 +61,13 @@ namespace Unipluss.Sign.StorageService.Client
         public FileResponse DownloadFile(string fileName)
         {
             string url = string.Format("{0}File/Download?ContainerName={1}&key={2}&filename={3}", _serviceUrl, _containerName, _secretKey, fileName);
-            WebRequest request = WebRequest.Create(url);
-            request.AddSecurityToken(_securityToken);
-            // If required by the server, set the credentials.
-            // Get the response.
-
+            WebRequest request = base.CreateGetRequest(url);
+         
             HttpWebResponse response = (HttpWebResponse)request.GetResponse();
 
             if (response.StatusCode == HttpStatusCode.OK)
             {
-                FileResponse retur=new FileResponse(){MetaData = new NameValueCollection()};
+                var retur=new FileResponse(){MetaData = new NameValueCollection()};
                 using (Stream stream = response.GetResponseStream())
                 {
                     using (var ms = new MemoryStream())

@@ -15,15 +15,13 @@ namespace Unipluss.Sign.StorageService.Client
         public string CreateAccount(string containerName)
         {
             string url = string.Format("{0}Admin?ContainerName={1}", _serviceUrl, containerName);
-            WebRequest request = WebRequest.Create(url);
-            request.AddSecurityToken(_securityToken);
-            request.Method = "POST";
+            WebRequest request = base.CreatePostRequest(url);
             // If required by the server, set the credentials.
             // Get the response.
 
             HttpWebResponse response = (HttpWebResponse)request.GetResponse();
 
-            if (response.StatusCode == HttpStatusCode.Created)
+            if (response.StatusCode == HttpStatusCode.Created )
             {
                 using (Stream stream = response.GetResponseStream())
                 {
@@ -38,8 +36,7 @@ namespace Unipluss.Sign.StorageService.Client
         public bool DoesAccountExist(string containerName)
         {
             string url = string.Format("{0}Admin?ContainerName={1}", _serviceUrl, containerName);
-            WebRequest request = WebRequest.Create(url);
-            request.AddSecurityToken(_securityToken);
+            WebRequest request = base.CreateGetRequest(url);
             // If required by the server, set the credentials.
             // Get the response.
            

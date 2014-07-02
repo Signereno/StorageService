@@ -30,12 +30,10 @@ namespace Unipluss.Sign.StorageService.Server
 
                 try
                 {
-                    string path = string.Format(@"{0}{1}\{2}\{3}", AppSettingsReader.RootFolder, account,
-                        key,filename);
+                    string path = string.Format(@"{0}{1}\{2}\{3}", AppSettingsReader.RootFolder, account, key,filename);
                     if (System.IO.File.Exists(path))
                     {
                         AddMetaData(context, account, key, filename);
-
                         context.Response.TransmitFile(path);
                     }
                     else
