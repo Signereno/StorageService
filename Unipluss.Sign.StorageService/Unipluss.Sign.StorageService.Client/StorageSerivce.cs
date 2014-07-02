@@ -28,6 +28,7 @@ namespace Unipluss.Sign.StorageService.Client
         protected WebRequest CreateGetRequest(string url)
         {
             WebRequest request = WebRequest.Create(url);
+            request.Method = "GET";
             request.AddSecurityToken(_securityToken);
 
             return request;
@@ -36,8 +37,9 @@ namespace Unipluss.Sign.StorageService.Client
         protected WebRequest CreatePostRequest(string url)
         {
             WebRequest request = WebRequest.Create(url);
-            request.AddSecurityToken(_securityToken);
             request.Method = "POST";
+            request.AddSecurityToken(_securityToken);
+        
             return request;
         }
 

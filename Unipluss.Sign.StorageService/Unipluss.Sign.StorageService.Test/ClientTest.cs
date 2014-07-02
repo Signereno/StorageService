@@ -10,22 +10,7 @@ using Unipluss.Sign.StorageService.Client.interfaces;
 using Unipluss.Sign.StorageService.Server.Code;
 
 namespace Unipluss.Sign.StorageService.Test
-{ 
-    [TestFixture]
-    public class BaseStorageServiceTest
-    {
-        protected string serviceUrl = "http://WIN-F6NMPNPRSJM/storage/";
-
-        [TestFixtureTearDown]
-        public void cleanup()
-        {
-            if (Directory.Exists((Unipluss.Sign.StorageService.Server.Code.AppSettingsReader.RootFolder)))
-                Directory.Delete(Unipluss.Sign.StorageService.Server.Code.AppSettingsReader.RootFolder, true);
-            Directory.CreateDirectory(Unipluss.Sign.StorageService.Server.Code.AppSettingsReader.RootFolder);
-        }
-    }
-
-
+{
     [TestFixture]
     public class ClientTest : BaseStorageServiceTest
     {
@@ -88,57 +73,5 @@ namespace Unipluss.Sign.StorageService.Test
             Console.WriteLine("Filename: {0}",result2.FileName);
 
         }
-    }
-
-    [TestFixture]
-    public class AdmintTest : BaseStorageServiceTest
-    {
-
-        private IStorageServiceAdmin admin;
-        private string fileName1 = "timestamptest.pdf";
-
-        private NameValueCollection metadata = new NameValueCollection()
-        {
-            {"md5", "asfasdfkmaslkdfnaskdfnl"},
-            {"encrypted", "false"}
-        };
-
-        [TestFixtureSetUp]
-        public void setup()
-        {
-            admin = new StorageServiceAdmin(base.serviceUrl,AppSettingsReader.UrlToken);
-            if (!Directory.Exists((Unipluss.Sign.StorageService.Server.Code.AppSettingsReader.RootFolder)))
-                Directory.CreateDirectory(Unipluss.Sign.StorageService.Server.Code.AppSettingsReader.RootFolder);
-
-        }
-
-        [Test]
-        public void CreateContainerTest()
-        {
-            string containerName = Guid.NewGuid().ToString("n");
-            string result = admin.CreateAccount(containerName);
-            Assert.IsNotNullOrEmpty(result);
-
-            Console.WriteLine(result);
-
-        }
-
-        [Test]
-        public void CreateContainerAnd_Test_if_it_exists_afterwards()
-        {
-            string containerName = Guid.NewGuid().ToString("n");
-            string result = admin.CreateAccount(containerName);
-            Assert.IsNotNullOrEmpty(result);
-
-            Console.WriteLine(result);
-
-
-            var result2 = admin.DoesAccountExist(containerName);
-            Assert.IsTrue(result2);
-
-
-        }
-
-
     }
 }

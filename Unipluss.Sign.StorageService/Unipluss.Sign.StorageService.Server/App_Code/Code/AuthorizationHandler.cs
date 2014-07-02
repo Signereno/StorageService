@@ -17,7 +17,10 @@ namespace Unipluss.Sign.StorageService.Server.Code
         {
             var token = context.Request.Headers["token"];
             var url = context.Request.Url.ToString();
-            if (string.IsNullOrWhiteSpace(token) || !token.Equals(Unipluss.Sign.StorageService.Server.Code.Hash.GetHash(url.ToLowerInvariant(), AppSettingsReader.UrlToken, HashType.SHA512, new UTF8Encoding())))
+            string tohash = string.Format("{0}&httpverb={1}&timestamp={2}", url.ToLowerInvariant(), context.Request.HttpMethod.ToLowerInvariant(), context.Request.Headers["timestamp"]);
+        
+
+            if (string.IsNullOrWhiteSpace(token) || !token.Equals(Unipluss.Sign.StorageService.Server.Code.Hash.GetHash(tohash, AppSettingsReader.UrlToken, HashType.SHA512, new UTF8Encoding())))
             {
                 context.Response.Write("Non authorized request");
                 context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;

@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Text;
 
 namespace Unipluss.Sign.StorageService.Client.Code
@@ -7,7 +8,11 @@ namespace Unipluss.Sign.StorageService.Client.Code
     {
         public static void AddSecurityToken(this WebRequest request,  string token)
         {
-            request.Headers.Add("token",Hash.GetHash(request.RequestUri.ToString().ToLowerInvariant(),token,HashType.SHA512,new UTF8Encoding()));
+            string timetamp = DateTime.UtcNow.ToString("s", System.Globalization.CultureInfo.InvariantCulture);
+            request.Headers.Add("timestamp",timetamp);
+            string tohash = string.Format("{0}&httpverb={1}&timestamp={2}", request.RequestUri.ToString().ToLowerInvariant(),request.Method.ToLowerInvariant(),timetamp);
+        
+            request.Headers.Add("token",Hash.GetHash(tohash,token,HashType.SHA512,new UTF8Encoding()));
         }
     }
 
