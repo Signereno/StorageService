@@ -11,3 +11,4 @@ C:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.
 C:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.Test\obj\Debug\Unipluss.Sign.StorageService.Test.csprojResolveAssemblyReference.cache
 C:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.Test\obj\Debug\Unipluss.Sign.StorageService.Test.dll
 C:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.Test\obj\Debug\Unipluss.Sign.StorageService.Test.pdb
+C:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.Test\bin\Debug\Unipluss.Sign.StorageService.Test.dll.config

@@ -1,9 +1,8 @@
-﻿
-    using System;
-    using System.Security.Cryptography;
-    using System.Text;
+﻿using System;
+using System.Security.Cryptography;
+using System.Text;
 
-    namespace Unipluss.Sign.StorageService.Server.Code
+namespace Unipluss.Sign.StorageService.Client.Code
     {
         public enum HashType : int
         {

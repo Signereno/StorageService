@@ -20,7 +20,7 @@ namespace Unipluss.Sign.StorageService.Server
                         System.IO.Directory.Exists(string.Format(@"{0}{1}\{2}", AppSettingsReader.RootFolder, account,
                             key)))
                     {
-                        context.Response.StatusCode = (int) HttpStatusCode.Found;
+                        context.Response.StatusCode = (int) HttpStatusCode.OK;
                     }
                     else
                     {
@@ -45,11 +45,11 @@ namespace Unipluss.Sign.StorageService.Server
                     ;
                     context.Response.End();
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
-                    context.Response.Write("Something went wrong");
-                    context.Response.StatusCode = (int) HttpStatusCode.InternalServerError;
-                    ;
+                    base.WriteExceptionIfDebug(context, e);
+                    context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                    
                     context.Response.End();
                 }
             }

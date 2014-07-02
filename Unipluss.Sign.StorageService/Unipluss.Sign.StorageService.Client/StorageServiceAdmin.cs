@@ -18,7 +18,8 @@ namespace Unipluss.Sign.StorageService.Client
             WebRequest request = base.CreatePostRequest(url);
             // If required by the server, set the credentials.
             // Get the response.
-
+            
+            request.ContentLength = 0;
             HttpWebResponse response = (HttpWebResponse)request.GetResponse();
 
             if (response.StatusCode == HttpStatusCode.Created )
@@ -42,7 +43,7 @@ namespace Unipluss.Sign.StorageService.Client
            
             HttpWebResponse response = (HttpWebResponse)request.GetResponse();
 
-            return response.StatusCode == HttpStatusCode.Found;
+            return response.StatusCode == HttpStatusCode.OK;
         }
     }
 }

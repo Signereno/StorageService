@@ -28,9 +28,9 @@ namespace Unipluss.Sign.StorageService.Server
                     string path = string.Format(@"{0}{1}\{2}\{3}", AppSettingsReader.RootFolder, account,
                         key,filename);
                     if (
-                        System.IO.Directory.Exists(path))
+                        System.IO.File.Exists(path))
                     {
-                        context.Response.StatusCode = (int)HttpStatusCode.Found;
+                        context.Response.StatusCode = (int)HttpStatusCode.OK;
                     }
                     else
                     {
@@ -48,10 +48,9 @@ namespace Unipluss.Sign.StorageService.Server
 
                     context.Response.End();
                 }
-                catch (ArgumentException)
+                catch (ArgumentException e)
                 {
-                    context.Response.Write("Not valid containername");
-                    context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    base.WriteExceptionIfDebug(context, e); context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
                     ;
                     context.Response.End();
                 }

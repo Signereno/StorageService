@@ -22,6 +22,7 @@ namespace Unipluss.Sign.StorageService.Server
                 {
                     context.Response.Write("Not valid filename");
                     context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    context.Response.End();
                     return;
                 }
 
@@ -69,9 +70,16 @@ namespace Unipluss.Sign.StorageService.Server
                     ;
                     context.Response.End();
                 }
-                catch (Exception)
+                catch (System.IO.PathTooLongException)
                 {
-                    context.Response.Write("Something went wrong");
+                    context.Response.Write(string.Format( "Filename to long, must me less than {0} characters or use a shorter rootpath in config.",(160-AppSettingsReader.RootFolder.Length-100)));
+                    context.Response.StatusCode = (int)HttpStatusCode.PreconditionFailed;
+                    ;
+                    context.Response.End();
+                }
+                catch (Exception e)
+                {
+                    base.WriteExceptionIfDebug(context, e);
                     context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
                     ;
                     context.Response.End();

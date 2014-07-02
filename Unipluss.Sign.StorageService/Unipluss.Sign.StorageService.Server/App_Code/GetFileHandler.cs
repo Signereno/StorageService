@@ -34,6 +34,7 @@ namespace Unipluss.Sign.StorageService.Server
                     if (System.IO.File.Exists(path))
                     {
                         AddMetaData(context, account, key, filename);
+                        context.Response.Headers.Add("x-response-filename",filename);
                         context.Response.TransmitFile(path);
                     }
                     else

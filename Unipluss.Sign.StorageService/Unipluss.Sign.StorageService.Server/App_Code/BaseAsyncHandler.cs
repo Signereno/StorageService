@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Web;
+using Unipluss.Sign.StorageService.Server.Code;
 
 namespace Unipluss.Sign.StorageService.Server
 {
-    public  abstract class BaseAsyncHandler : IHttpHandler
+    public  abstract class BaseAsyncHandler : IHttpAsyncHandler
     {
         protected abstract void ServeContent(HttpContext context);
         public void ProcessRequest(HttpContext context)
@@ -29,5 +30,13 @@ namespace Unipluss.Sign.StorageService.Server
         }
 
         #endregion
+
+        protected  void WriteExceptionIfDebug(HttpContext context, Exception e)
+        {
+            string response = "Something went wrong";
+            if (AppSettingsReader.Debug)
+                response += Environment.NewLine+ e.ToString();
+            context.Response.Write(response);
+        }
     }
 }

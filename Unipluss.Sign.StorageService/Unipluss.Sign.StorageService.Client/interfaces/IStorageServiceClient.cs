@@ -1,10 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Specialized;
 using Unipluss.Sign.StorageService.Client.entities;
 
-namespace Unipluss.Sign.StorageService.Client
+namespace Unipluss.Sign.StorageService.Client.interfaces
 {
     public interface IStorageServiceClient{
 

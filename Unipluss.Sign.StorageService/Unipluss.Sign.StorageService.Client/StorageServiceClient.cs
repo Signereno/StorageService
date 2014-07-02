@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using Unipluss.Sign.StorageService.Client.entities;
+using Unipluss.Sign.StorageService.Client.interfaces;
 
 namespace Unipluss.Sign.StorageService.Client
 {
@@ -55,7 +56,7 @@ namespace Unipluss.Sign.StorageService.Client
 
             HttpWebResponse response = (HttpWebResponse)request.GetResponse();
 
-            return response.StatusCode == HttpStatusCode.Found;
+            return response.StatusCode == HttpStatusCode.OK;
         }
 
         public FileResponse DownloadFile(string fileName)
@@ -80,6 +81,7 @@ namespace Unipluss.Sign.StorageService.Client
                             var value = response.Headers[key];
                             retur.MetaData.Add(key.Replace("x-metadata-",string.Empty),value);
                         }
+                        retur.FileName = response.Headers["x-response-filename"];
                         return retur;
 
                     }

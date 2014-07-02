@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using Unipluss.Sign.StorageService.Client.Code;
 
 namespace Unipluss.Sign.StorageService.Client
 {
