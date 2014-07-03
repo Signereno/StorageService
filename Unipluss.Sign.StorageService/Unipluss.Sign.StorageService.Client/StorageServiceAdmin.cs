@@ -8,13 +8,16 @@ namespace Unipluss.Sign.StorageService.Client
 {
     public class StorageServiceAdmin :StorageSerivce, IStorageServiceAdmin
     {
-        public StorageServiceAdmin(string serviceUrl, string securityToken) : base(serviceUrl, securityToken)
+        private readonly string _adminkey;
+
+        public StorageServiceAdmin(string serviceUrl, string securityToken,string adminkey) : base(serviceUrl, securityToken)
         {
+            _adminkey = adminkey;
         }
 
-        public string CreateAccount(string containerName)
+        public string CreateContainer(string containerName)
         {
-            string url = string.Format("{0}Admin?ContainerName={1}", _serviceUrl, containerName);
+            string url = string.Format("{0}Admin/Container/Create?ContainerName={1}&adminkey={2}", _serviceUrl, containerName, _adminkey);
             WebRequest request = base.CreatePostRequest(url);
             // If required by the server, set the credentials.
             // Get the response.
@@ -30,13 +33,13 @@ namespace Unipluss.Sign.StorageService.Client
                     return reader.ReadToEnd();
                 }
             }
-            return response.StatusDescription;
+            return null;
 
         }
 
-        public bool DoesAccountExist(string containerName)
+        public bool DoesContainerExist(string containerName)
         {
-            string url = string.Format("{0}Admin?ContainerName={1}", _serviceUrl, containerName);
+            string url = string.Format("{0}Admin/Container?ContainerName={1}&adminkey={2}", _serviceUrl, containerName, _adminkey);
             WebRequest request = base.CreateGetRequest(url);
             // If required by the server, set the credentials.
             // Get the response.
@@ -44,6 +47,27 @@ namespace Unipluss.Sign.StorageService.Client
             HttpWebResponse response = (HttpWebResponse)request.GetResponse();
 
             return response.StatusCode == HttpStatusCode.OK;
+        }
+
+        public string GetContainerKey(string containerName)
+        {
+            string url = string.Format("{0}Admin/Container/Key?ContainerName={1}&adminkey={2}", _serviceUrl, containerName, _adminkey);
+            WebRequest request = base.CreateGetRequest(url);
+            // If required by the server, set the credentials.
+            // Get the response.
+
+            request.ContentLength = 0;
+            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                using (Stream stream = response.GetResponseStream())
+                {
+                    StreamReader reader = new StreamReader(stream, Encoding.UTF8);
+                    return reader.ReadToEnd();
+                }
+            }
+            return response.StatusDescription;
         }
     }
 }

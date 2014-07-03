@@ -12,8 +12,9 @@ namespace Unipluss.Sign.StorageService.Server.Code
     public  static class AuthorizationHandler
     {
 
-        public static bool VerifyIfRequestIsAuthed(this HttpContext context)
+        public static bool VerifyIfRequestIsAuthed(this HttpContext context,bool adminAccess=false)
         {
+            context.Response.Headers["Server"] = "SignereStorage 1.0";
             var token = context.Request.Headers["token"];
             var url = context.Request.Url.ToString();
             var timestamp = context.Request.Headers["timestamp"];
@@ -58,7 +59,14 @@ namespace Unipluss.Sign.StorageService.Server.Code
                 return false;
             }
 
-            context.Response.Headers["Server"] = "SignereStorage 1.0";
+            if (adminAccess && !context.Request.QueryString["adminkey"].Equals(AppSettingsReader.AdminKey))
+            {
+                context.Response.Write("Non authorized for admin request");
+                context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                context.Response.End();
+                return false;
+            }
+
             return true;
         }
 

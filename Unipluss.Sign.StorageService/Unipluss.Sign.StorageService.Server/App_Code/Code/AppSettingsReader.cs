@@ -24,6 +24,14 @@ namespace Unipluss.Sign.StorageService.Server.Code
             }
         }
 
+        public static string AdminKey
+        {
+            get
+            {
+                return ConfigurationManager.AppSettings["adminkey"];
+            }
+        }
+
         public static bool Debug
         {
             get

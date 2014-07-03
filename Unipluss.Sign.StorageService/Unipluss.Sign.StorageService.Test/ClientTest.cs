@@ -30,8 +30,8 @@ namespace Unipluss.Sign.StorageService.Test
         {
             if (!Directory.Exists((Unipluss.Sign.StorageService.Server.Code.AppSettingsReader.RootFolder)))
                 Directory.CreateDirectory(Unipluss.Sign.StorageService.Server.Code.AppSettingsReader.RootFolder);
-            var admin = new StorageServiceAdmin(base.serviceUrl, "test");
-              var key=admin.CreateAccount("test");
+            var admin = new StorageServiceAdmin(base.serviceUrl, "test",AppSettingsReader.AdminKey);
+              var key=admin.CreateContainer("test");
 
               client = new StorageServiceClient(base.serviceUrl, AppSettingsReader.UrlToken, "test", key);
         }
@@ -101,6 +101,21 @@ namespace Unipluss.Sign.StorageService.Test
             {
                 Console.WriteLine("Ut av sync");
             }
+        }
+
+        [Test]
+        public void GetSubDirectory()
+        {
+            var directories =
+                      Directory.GetDirectories(string.Format(@"{0}{1}", AppSettingsReader.RootFolder, "test"));
+            foreach (string directory in directories)
+            {
+                Console.WriteLine(directory);
+            }
+            Console.WriteLine(new DirectoryInfo(directories.FirstOrDefault()).Name);
+            Console.WriteLine(directories.FirstOrDefault());
+            Console.WriteLine(Path.GetDirectoryName(directories.FirstOrDefault()+"\\"));
+
         }
     }
 }

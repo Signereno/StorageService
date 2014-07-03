@@ -2,7 +2,8 @@
 {
     public interface IStorageServiceAdmin
     {
-        string CreateAccount(string containerName);
-        bool DoesAccountExist(string containerName);
+        string CreateContainer(string containerName);
+        bool DoesContainerExist(string containerName);
+        string GetContainerKey(string containerName);
     }
 }

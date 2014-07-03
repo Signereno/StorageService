@@ -5,11 +5,11 @@ using Unipluss.Sign.StorageService.Server.Code;
 
 namespace Unipluss.Sign.StorageService.Server
 {
-    public class DoesAccountExistHandler : BaseAsyncHandler
+    public class DoesContainerExistHandler : BaseAsyncHandler
     {
         protected override void ServeContent(HttpContext context)
         {
-            if (AuthorizationHandler.VerifyIfRequestIsAuthed(context))
+            if (AuthorizationHandler.VerifyIfRequestIsAuthed(context,true))
             {
                 var account = context.Request.QueryString["containername"];
                 var key = context.Request.QueryString["key"];
@@ -20,6 +20,7 @@ namespace Unipluss.Sign.StorageService.Server
                         System.IO.Directory.Exists(string.Format(@"{0}{1}\{2}", AppSettingsReader.RootFolder, account,
                             key)))
                     {
+                        context.Response.Headers.Add("DoesContainerExistHandler","true");
                         context.Response.StatusCode = (int) HttpStatusCode.OK;
                     }
                     else

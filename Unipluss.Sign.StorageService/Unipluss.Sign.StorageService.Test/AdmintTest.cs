@@ -21,10 +21,10 @@ namespace Unipluss.Sign.StorageService.Test
             {"encrypted", "false"}
         };
 
-        [TestFixtureSetUp]
+        [SetUp]
         public void setup()
         {
-            admin = new StorageServiceAdmin(base.serviceUrl,AppSettingsReader.UrlToken);
+            admin = new StorageServiceAdmin(base.serviceUrl,AppSettingsReader.UrlToken,AppSettingsReader.AdminKey);
             if (!Directory.Exists((Unipluss.Sign.StorageService.Server.Code.AppSettingsReader.RootFolder)))
                 Directory.CreateDirectory(Unipluss.Sign.StorageService.Server.Code.AppSettingsReader.RootFolder);
 
@@ -34,9 +34,33 @@ namespace Unipluss.Sign.StorageService.Test
         public void CreateContainerTest()
         {
             string containerName = Guid.NewGuid().ToString("n");
-            string result = admin.CreateAccount(containerName);
+            string result = admin.CreateContainer(containerName);
             Assert.IsNotNullOrEmpty(result);
 
+            Console.WriteLine(result);
+
+        }
+
+        [Test]
+        public void CreateContainerRandom_and_get_key_and_check_that_they_match()
+        {
+            string containerName = Guid.NewGuid().ToString("n");
+            string result = admin.CreateContainer(containerName);
+            Assert.IsNotNullOrEmpty(result);
+
+           Assert.AreEqual(result,admin.GetContainerKey(containerName));
+
+        }
+
+
+        [Test]
+        public void CreateContainerWithIncorrectAdminKeyTest()
+        {
+            admin = new StorageServiceAdmin(base.serviceUrl, AppSettingsReader.UrlToken, "test");
+            string containerName = Guid.NewGuid().ToString("n");
+
+            var result = Assert.Throws<System.Net.WebException>(() => admin.CreateContainer(containerName));
+          Assert.IsTrue(result.ToString().Contains("401"));
             Console.WriteLine(result);
 
         }
@@ -45,13 +69,13 @@ namespace Unipluss.Sign.StorageService.Test
         public void CreateContainerAnd_Test_if_it_exists_afterwards()
         {
             string containerName = Guid.NewGuid().ToString("n");
-            string result = admin.CreateAccount(containerName);
+            string result = admin.CreateContainer(containerName);
             Assert.IsNotNullOrEmpty(result);
 
             Console.WriteLine(result);
 
 
-            var result2 = admin.DoesAccountExist(containerName);
+            var result2 = admin.DoesContainerExist(containerName);
             Assert.IsTrue(result2);
 
 

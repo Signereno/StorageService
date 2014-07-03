@@ -1,0 +1,16 @@
+C:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.Test\bin\Release\Hus budsjett.xlsx
+C:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.Test\bin\Release\timestamptest.pdf
+C:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.Test\bin\Release\Unipluss.Sign.StorageService.Test.dll.config
+C:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.Test\bin\Release\Unipluss.Sign.StorageService.Test.dll
+C:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.Test\bin\Release\Unipluss.Sign.StorageService.Test.pdb
+C:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.Test\bin\Release\nunit.framework.dll
+C:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.Test\bin\Release\Unipluss.Sign.StorageService.Client.dll
+C:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.Test\bin\Release\Unipluss.Sign.StorageService.Server.dll
+C:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.Test\bin\Release\Newtonsoft.Json.dll
+C:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.Test\bin\Release\Unipluss.Sign.StorageService.Client.pdb
+C:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.Test\bin\Release\Unipluss.Sign.StorageService.Server.pdb
+C:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.Test\bin\Release\nunit.framework.xml
+C:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.Test\bin\Release\Newtonsoft.Json.xml
+C:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.Test\obj\Release\Unipluss.Sign.StorageService.Test.csprojResolveAssemblyReference.cache
+C:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.Test\obj\Release\Unipluss.Sign.StorageService.Test.dll
+C:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.Test\obj\Release\Unipluss.Sign.StorageService.Test.pdb
