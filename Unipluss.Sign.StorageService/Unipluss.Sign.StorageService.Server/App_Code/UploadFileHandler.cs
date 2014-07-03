@@ -105,9 +105,9 @@ namespace Unipluss.Sign.StorageService.Server
             {
                 filteredMetaData.Add(metaKey.Replace("x-metadata-", string.Empty), metadata[metaKey]);
             }
-
+            
             Extensions.Serialize(filteredMetaData,
-                string.Format(@"{0}\{1}.metadata", path, Path.GetFileNameWithoutExtension(filename)));
+                string.Format(@"{0}\{1}.metadata", path, Path.GetFileName(filename).Replace(".","_")));
         }
     }
 }

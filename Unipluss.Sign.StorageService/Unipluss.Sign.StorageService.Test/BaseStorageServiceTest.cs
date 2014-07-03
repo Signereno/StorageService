@@ -11,9 +11,9 @@ namespace Unipluss.Sign.StorageService.Test
         [TestFixtureTearDown]
         public void cleanup()
         {
-            if (Directory.Exists((Unipluss.Sign.StorageService.Server.Code.AppSettingsReader.RootFolder)))
-                Directory.Delete(Unipluss.Sign.StorageService.Server.Code.AppSettingsReader.RootFolder, true);
-            Directory.CreateDirectory(Unipluss.Sign.StorageService.Server.Code.AppSettingsReader.RootFolder);
+            //if (Directory.Exists((Unipluss.Sign.StorageService.Server.Code.AppSettingsReader.RootFolder)))
+            //    Directory.Delete(Unipluss.Sign.StorageService.Server.Code.AppSettingsReader.RootFolder, true);
+            //Directory.CreateDirectory(Unipluss.Sign.StorageService.Server.Code.AppSettingsReader.RootFolder);
         }
     }
 }

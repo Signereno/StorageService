@@ -73,7 +73,7 @@ namespace Unipluss.Sign.StorageService.Server
         private static void AddMetaData(HttpContext context, string account, string key, string filename)
         {
             var metapath = string.Format(@"{0}{1}\{2}\{3}.metadata", AppSettingsReader.RootFolder, account,
-                key, Path.GetFileNameWithoutExtension(filename));
+                key, Path.GetFileName(filename).Replace(".", "_"));
             var Metadata = Extensions.DeSerialize(metapath);
             foreach (string headerKey in Metadata)
             {

@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Globalization;
 using System.IO;
 using System.Net;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Security.Policy;
 using System.Text;
 using System.Web;
@@ -74,27 +72,6 @@ namespace Unipluss.Sign.StorageService.Server.Code
         {
             return !string.IsNullOrWhiteSpace(folderName) &&
                    folderName.IndexOfAny(Path.GetInvalidPathChars()) < 0;
-        }
-    }
-
-    public static class Extensions
-    {
-        public static void Serialize(this NameValueCollection metaData, string filepath)
-        {
-            Stream stream = File.Open(filepath, FileMode.Create);
-            BinaryFormatter bFormatter = new BinaryFormatter();
-            bFormatter.Serialize(stream, metaData);
-            stream.Close(); 
-        }
-
-        public static NameValueCollection DeSerialize(this string filepath)
-        {
-            NameValueCollection objectToSerialize;
-            Stream stream = File.Open(filepath, FileMode.Open);
-            BinaryFormatter bFormatter = new BinaryFormatter();
-            objectToSerialize = (NameValueCollection)bFormatter.Deserialize(stream);
-            stream.Close();
-            return objectToSerialize;
         }
     }
 }
