@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Globalization;
 using System.IO;
 using System.Net;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -17,9 +18,40 @@ namespace Unipluss.Sign.StorageService.Server.Code
         {
             var token = context.Request.Headers["token"];
             var url = context.Request.Url.ToString();
-            string tohash = string.Format("{0}&httpverb={1}&timestamp={2}", url.ToLowerInvariant(), context.Request.HttpMethod.ToLowerInvariant(), context.Request.Headers["timestamp"]);
-        
+            var timestamp = context.Request.Headers["timestamp"];
+            string tohash = string.Format("{0}&httpverb={1}&timestamp={2}", url.ToLowerInvariant(), context.Request.HttpMethod.ToLowerInvariant(),timestamp);
 
+            //If Timestamp is missing
+            if (string.IsNullOrWhiteSpace(timestamp))
+            {
+                context.Response.Write("Timestamp is missing");
+                context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                context.Response.End();
+                return false;
+            }
+            //2014-07-03T08:45:33.7403013Z
+            DateTime httpTimestamp = DateTime.MinValue;
+            DateTime.TryParseExact(timestamp, "o", CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out httpTimestamp);
+
+            //If timestamp does not parse correctly
+            if (httpTimestamp.Equals(DateTime.MinValue))
+            {
+                context.Response.Write("Timestamp is not in ISO 8601 format.");
+                context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                context.Response.End();
+                return false;
+            }
+
+            //If timestamp is more than 10 minutes of with the server clock
+            if (DateTime.UtcNow.AddMinutes(10) < httpTimestamp || DateTime.UtcNow.AddMinutes(-10) > httpTimestamp)
+            {
+                context.Response.Write(string.Format( "Timestamp have expired or out of sync with server clock. ({0})",DateTime.UtcNow.ToString("o", System.Globalization.CultureInfo.InvariantCulture)));
+                context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                context.Response.End();
+                return false;
+            }
+           
+            //If security token is correct
             if (string.IsNullOrWhiteSpace(token) || !token.Equals(Unipluss.Sign.StorageService.Server.Code.Hash.GetHash(tohash, AppSettingsReader.UrlToken, HashType.SHA512, new UTF8Encoding())))
             {
                 context.Response.Write("Non authorized request");
@@ -28,7 +60,7 @@ namespace Unipluss.Sign.StorageService.Server.Code
                 return false;
             }
 
-
+            context.Response.Headers["Server"] = "SignereStorage 1.0";
             return true;
         }
 

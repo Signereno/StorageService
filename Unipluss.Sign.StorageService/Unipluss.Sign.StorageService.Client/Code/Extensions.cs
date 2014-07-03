@@ -8,7 +8,7 @@ namespace Unipluss.Sign.StorageService.Client.Code
     {
         public static void AddSecurityToken(this WebRequest request,  string token)
         {
-            string timetamp = DateTime.UtcNow.ToString("s", System.Globalization.CultureInfo.InvariantCulture);
+            string timetamp = DateTime.UtcNow.ToString("o", System.Globalization.CultureInfo.InvariantCulture);
             request.Headers.Add("timestamp",timetamp);
             string tohash = string.Format("{0}&httpverb={1}&timestamp={2}", request.RequestUri.ToString().ToLowerInvariant(),request.Method.ToLowerInvariant(),timetamp);
         

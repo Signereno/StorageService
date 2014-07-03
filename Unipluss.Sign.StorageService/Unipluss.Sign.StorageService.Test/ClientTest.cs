@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -72,6 +73,34 @@ namespace Unipluss.Sign.StorageService.Test
             }
             Console.WriteLine("Filename: {0}",result2.FileName);
 
+        }
+
+     
+    }
+
+    [TestFixture]
+    public class MiscTest
+    {
+        [Test]
+        public void ParseDate()
+        {
+            var timestamp = DateTime.UtcNow.ToString("o");//"2014-07-03T08:45:33.7403013Z";
+            DateTime httpTimestamp = DateTime.MinValue;
+
+          DateTime.TryParseExact(timestamp, "o", CultureInfo.InvariantCulture,DateTimeStyles.RoundtripKind,out httpTimestamp);
+
+
+          httpTimestamp=  httpTimestamp.AddMinutes(-11);
+            Console.WriteLine(timestamp);
+            Console.WriteLine(httpTimestamp.ToString("o", System.Globalization.CultureInfo.InvariantCulture));
+            Console.WriteLine(DateTime.UtcNow.ToString("o", System.Globalization.CultureInfo.InvariantCulture));
+
+           
+
+            if (DateTime.UtcNow.AddMinutes(10) < httpTimestamp || DateTime.UtcNow.AddMinutes(-10) > httpTimestamp)
+            {
+                Console.WriteLine("Ut av sync");
+            }
         }
     }
 }
