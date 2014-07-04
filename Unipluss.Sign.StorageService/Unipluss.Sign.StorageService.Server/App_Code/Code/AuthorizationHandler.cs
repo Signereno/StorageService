@@ -20,6 +20,12 @@ namespace Unipluss.Sign.StorageService.Server.Code
             var timestamp = context.Request.Headers["timestamp"];
             string tohash = string.Format("{0}&httpverb={1}&timestamp={2}", url.ToLowerInvariant(), context.Request.HttpMethod.ToLowerInvariant(),timestamp);
 
+            if (context.Request.Headers["filesha1"] != null &&
+                !string.IsNullOrWhiteSpace(context.Request.Headers["filesha1"]))
+            {
+                tohash += string.Format("&filesha1={0}", context.Request.Headers["filesha1"]);
+            }
+
             //If Timestamp is missing
             if (string.IsNullOrWhiteSpace(timestamp))
             {

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -8,12 +7,12 @@ using Unipluss.Sign.StorageService.Server.Code;
 
 namespace Unipluss.Sign.StorageService.Server
 {
-    public class CreateContainerHandler : BaseAsyncHandler
+    public class GetContainerMetaDataHander : BaseAsyncHandler
     {
-      
-        protected  override void ServeContent(HttpContext context)
+
+        protected override void ServeContent(HttpContext context)
         {
-            if (AuthorizationHandler.VerifyIfRequestIsAuthed(context,true))
+            if (AuthorizationHandler.VerifyIfRequestIsAuthed(context, true))
             {
                 var account = context.Request.QueryString["containername"];
 
@@ -25,22 +24,23 @@ namespace Unipluss.Sign.StorageService.Server
                     return;
                 }
 
-                string key = RandomStringGenerator.GetRandomString(100);
                 try
                 {
-                    System.IO.Directory.CreateDirectory(string.Format(@"{0}{1}\{2}", AppSettingsReader.RootFolder, account, key));
-                    SaveMetaData(context, account);
-                    
-                    context.Response.AddHeader("Content-type", "text/plain; charset=utf-8");
-                    context.Response.Write(key);
-                    context.Response.Headers.Add("test","test");
-                    context.Response.StatusCode = (int) HttpStatusCode.Created;
+                    AddMetaData(context, account);
+                    context.Response.Headers.Add("GetContainerMetaDataHander", "true");
+                    context.Response.StatusCode = (int) HttpStatusCode.OK;
                     context.Response.End();
                 }
                 catch (ArgumentException)
                 {
                     context.Response.Write("Not valid containername");
                     context.Response.StatusCode = (int) HttpStatusCode.BadRequest;
+                    context.Response.End();
+                }
+                catch (DirectoryNotFoundException)
+                {
+                    context.Response.Write("Container not found");
+                    context.Response.StatusCode = (int)HttpStatusCode.NotFound;
                     context.Response.End();
                 }
                 catch (System.IO.PathTooLongException)
@@ -52,23 +52,24 @@ namespace Unipluss.Sign.StorageService.Server
                 catch (Exception e)
                 {
                     base.WriteExceptionIfDebug(context, e);
-                    context.Response.StatusCode = (int) HttpStatusCode.InternalServerError;
+                    context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
                     context.Response.End();
                 }
             }
         }
-        private static void SaveMetaData(HttpContext context,string  account)
+        private static void AddMetaData(HttpContext context, string account)
         {
-            var metadata = context.Request.Headers;
-            NameValueCollection filteredMetaData = new NameValueCollection();
+            var metapath = string.Format(@"{0}{1}\container.metadata", AppSettingsReader.RootFolder, account);
 
-            foreach (string metaKey in metadata.AllKeys.Where(x => x.Contains("x-metadata-")))
+            if (File.Exists(metapath))
             {
-                filteredMetaData.Add(metaKey.Replace("x-metadata-", string.Empty), metadata[metaKey]);
+                var Metadata = Extensions.DeSerialize(metapath);
+                foreach (string headerKey in Metadata)
+                {
+                    context.Response.Headers.Add(string.Format("x-metadata-{0}", headerKey), Metadata[headerKey]);
+                }
             }
-            if (filteredMetaData.Count > 1)
-                Extensions.Serialize(filteredMetaData,string.Format(@"{0}{1}\container.metadata", AppSettingsReader.RootFolder, account));
         }
-     
+
     }
 }

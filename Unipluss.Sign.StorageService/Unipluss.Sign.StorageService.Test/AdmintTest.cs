@@ -42,6 +42,40 @@ namespace Unipluss.Sign.StorageService.Test
         }
 
         [Test]
+        public void DoesContainerNameWhenItDoesNotTest()
+        {
+            string containerName = Guid.NewGuid().ToString("n");
+            bool result = admin.DoesContainerExist(containerName);
+            Assert.False(result);
+
+        }
+
+        [Test]
+        public void GetContainerKeyFromContainerThatDoesNotExistThrowsExceptions()
+        {
+            string containerName = Guid.NewGuid().ToString("n");
+            var result = Assert.Throws<Exception>(()=>admin.GetContainerKey(containerName));
+            Console.WriteLine(result);
+            Assert.IsTrue(result.ToString().Contains(" Statuscode: NotFound"));
+        }
+
+        [Test]
+        public void CreateContainerWithMetadataTest()
+        {
+            string containerName = Guid.NewGuid().ToString("n");
+            string result = admin.CreateContainer(containerName,new NameValueCollection(){{"name","testname"},{"metakey","metadata"}});
+            Assert.IsNotNullOrEmpty(result);
+
+            Console.WriteLine(result);
+
+            var result2 = admin.GetContainerMetaData(containerName);
+
+            Assert.AreEqual(result2.Get("name"),"testname");
+            Assert.AreEqual(result2.Get("metakey"), "metadata");
+
+        }
+
+        [Test]
         public void CreateContainerRandom_and_get_key_and_check_that_they_match()
         {
             string containerName = Guid.NewGuid().ToString("n");
@@ -59,8 +93,8 @@ namespace Unipluss.Sign.StorageService.Test
             admin = new StorageServiceAdmin(base.serviceUrl, AppSettingsReader.UrlToken, "test");
             string containerName = Guid.NewGuid().ToString("n");
 
-            var result = Assert.Throws<System.Net.WebException>(() => admin.CreateContainer(containerName));
-          Assert.IsTrue(result.ToString().Contains("401"));
+            var result = Assert.Throws<Exception>(() => admin.CreateContainer(containerName));
+            Assert.IsTrue(result.ToString().Contains("Non authorized for admin request"));
             Console.WriteLine(result);
 
         }

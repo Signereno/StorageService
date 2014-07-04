@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Text;
 using NUnit.Framework;
 using Unipluss.Sign.StorageService.Client;
@@ -25,7 +23,7 @@ namespace Unipluss.Sign.StorageService.Test
             {"encrypted", "false"}
         };
 
-        [TestFixtureSetUp]
+        [SetUp]
         public void setup()
         {
             if (!Directory.Exists((Unipluss.Sign.StorageService.Server.Code.AppSettingsReader.RootFolder)))
@@ -49,7 +47,12 @@ namespace Unipluss.Sign.StorageService.Test
 
         }
 
-
+        [Test]
+        public void DoesFileExistThatDoesNotTest()
+        {
+            var filename = string.Format("{0}.pdf", Guid.NewGuid().ToString("n"));
+            Assert.IsFalse(client.DoesFileExist(filename));
+        }
   
 
         [Test]
@@ -73,49 +76,13 @@ namespace Unipluss.Sign.StorageService.Test
             }
             Console.WriteLine("Filename: {0}",result2.FileName);
 
+            Assert.AreEqual(result2.Bytes,data);
+            Assert.AreEqual(result2.FileName,testFilename);
+
+            Assert.AreEqual(2, result2.MetaData.Count);
+
         }
 
      
-    }
-
-    [TestFixture]
-    public class MiscTest
-    {
-        [Test]
-        public void ParseDate()
-        {
-            var timestamp = DateTime.UtcNow.ToString("o");//"2014-07-03T08:45:33.7403013Z";
-            DateTime httpTimestamp = DateTime.MinValue;
-
-          DateTime.TryParseExact(timestamp, "o", CultureInfo.InvariantCulture,DateTimeStyles.RoundtripKind,out httpTimestamp);
-
-
-          httpTimestamp=  httpTimestamp.AddMinutes(-11);
-            Console.WriteLine(timestamp);
-            Console.WriteLine(httpTimestamp.ToString("o", System.Globalization.CultureInfo.InvariantCulture));
-            Console.WriteLine(DateTime.UtcNow.ToString("o", System.Globalization.CultureInfo.InvariantCulture));
-
-           
-
-            if (DateTime.UtcNow.AddMinutes(10) < httpTimestamp || DateTime.UtcNow.AddMinutes(-10) > httpTimestamp)
-            {
-                Console.WriteLine("Ut av sync");
-            }
-        }
-
-        [Test]
-        public void GetSubDirectory()
-        {
-            var directories =
-                      Directory.GetDirectories(string.Format(@"{0}{1}", AppSettingsReader.RootFolder, "test"));
-            foreach (string directory in directories)
-            {
-                Console.WriteLine(directory);
-            }
-            Console.WriteLine(new DirectoryInfo(directories.FirstOrDefault()).Name);
-            Console.WriteLine(directories.FirstOrDefault());
-            Console.WriteLine(Path.GetDirectoryName(directories.FirstOrDefault()+"\\"));
-
-        }
     }
 }

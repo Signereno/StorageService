@@ -87,13 +87,17 @@ namespace Unipluss.Sign.StorageService.Server
             }
         }
 
-        private static void SaveFile(HttpContext context, string path, string filename)
+        private static bool SaveFile(HttpContext context, string path, string filename)
         {
             using (var ms = new MemoryStream())
             {
                 context.Request.InputStream.CopyTo(ms);
-                File.WriteAllBytes(string.Format(@"{0}\{1}", path, filename), ms.ToArray());
+                var bytes = ms.ToArray();
+                if (Hash.GetSHA1(bytes).Equals(context.Request.Headers["filesha1"]))
+                File.WriteAllBytes(string.Format(@"{0}\{1}", path, filename),bytes );
             }
+
+            return true;
         }
 
         private static void SaveMetaData(HttpContext context, string path, string filename)
@@ -105,9 +109,9 @@ namespace Unipluss.Sign.StorageService.Server
             {
                 filteredMetaData.Add(metaKey.Replace("x-metadata-", string.Empty), metadata[metaKey]);
             }
-            
-            Extensions.Serialize(filteredMetaData,
-                string.Format(@"{0}\{1}.metadata", path, Path.GetFileName(filename).Replace(".","_")));
+            if(filteredMetaData.Count>1)
+                Extensions.Serialize(filteredMetaData,
+                    string.Format(@"{0}\{1}.metadata", path, Path.GetFileName(filename).Replace(".","_")));
         }
     }
 }

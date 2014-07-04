@@ -5,8 +5,8 @@ namespace Unipluss.Sign.StorageService.Client.interfaces
 {
     public interface IStorageServiceClient{
 
-        bool UploadFile(byte[] data, string filename,NameValueCollection metaData);
-        bool UploadFile(string filepath,NameValueCollection metaData);
+        bool UploadFile(byte[] data, string filename,NameValueCollection metaData=null);
+        bool UploadFile(string filepath, NameValueCollection metaData = null);
 
         bool DoesFileExist(string fileName);
 

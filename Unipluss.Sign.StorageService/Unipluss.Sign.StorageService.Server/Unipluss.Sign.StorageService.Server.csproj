@@ -47,6 +47,7 @@
     <Compile Include="App_Code\Code\RandomStringGenerator.cs" />
     <Compile Include="App_Code\CreateContainerHandler.cs" />
     <Compile Include="App_Code\DoesFileExistsHandler.cs" />
+    <Compile Include="App_Code\GetContainerMetaDataHander.cs" />
     <Compile Include="App_Code\GetFileHandler.cs" />
     <Compile Include="App_Code\UploadFileHandler.cs" />
     <Compile Include="App_Code\DoesContainerExistHandler.cs" />

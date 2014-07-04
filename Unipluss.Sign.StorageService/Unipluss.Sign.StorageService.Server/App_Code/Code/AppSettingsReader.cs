@@ -43,8 +43,8 @@ namespace Unipluss.Sign.StorageService.Server.Code
 
         public static string EnsureLastSlash(this string path)
         {
-            if (!path.EndsWith("/"))
-                path += "/";
+            if (!path.EndsWith("\\"))
+                path += "\\";
             return path;
         }
     }

@@ -34,11 +34,11 @@ namespace Unipluss.Sign.StorageService.Client
             return request;
         }
 
-        protected WebRequest CreatePostRequest(string url)
+        protected WebRequest CreatePostRequest(string url,string fileCheckSum=null)
         {
             WebRequest request = WebRequest.Create(url);
             request.Method = "POST";
-            request.AddSecurityToken(_securityToken);
+            request.AddSecurityToken(_securityToken,fileCheckSum);
         
             return request;
         }

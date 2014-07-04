@@ -34,13 +34,20 @@ namespace Unipluss.Sign.StorageService.Server
                     }
                     else
                     {
-                        if (System.IO.Directory.Exists(string.Format(@"{0}{1}", AppSettingsReader.RootFolder, account)))
+                        if (System.IO.Directory.Exists(string.Format(@"{0}{1}\{2}\", AppSettingsReader.RootFolder, account,key)))
                         {
+                            context.Response.Write("File not found");
+                            context.Response.StatusCode = (int)HttpStatusCode.NotFound;   
+                        }
+                        else  if (System.IO.Directory.Exists(string.Format(@"{0}{1}", AppSettingsReader.RootFolder, account)))
+                        {
+                            //context.Response.Headers.Add("path", string.Format(@"{0}{1}", AppSettingsReader.RootFolder, account));
                             context.Response.Write("Non authorized request");
                             context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
                         }
                         else
                         {
+                            context.Response.Write("Container not found");
                             context.Response.StatusCode = (int)HttpStatusCode.NotFound;
                         }
 

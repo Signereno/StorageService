@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using Unipluss.Sign.StorageService.Client.Code;
 using Unipluss.Sign.StorageService.Client.entities;
 using Unipluss.Sign.StorageService.Client.interfaces;
 
@@ -22,7 +23,8 @@ namespace Unipluss.Sign.StorageService.Client
         public bool UploadFile(byte[] data, string fileName, NameValueCollection metaData)
         {
             string url = string.Format("{0}File?ContainerName={1}&key={2}&filename={3}", _serviceUrl, _containerName, _secretKey, fileName);
-            WebRequest request = base.CreatePostRequest(url);
+            WebRequest request = base.CreatePostRequest(url,Hash.GetSHA1(data));
+          
 
             // add post data to request
             using (Stream postStream = request.GetRequestStream())
@@ -33,11 +35,15 @@ namespace Unipluss.Sign.StorageService.Client
             }
 
             //add metadata to header
-            foreach (string key in metaData.AllKeys)
+            if (metaData != null && metaData.HasKeys())
             {
-                var value = metaData[key];
-                request.Headers.Add(string.Format("x-metadata-{0}",key),value);
+                foreach (string key in metaData.AllKeys)
+                {
+                    var value = metaData[key];
+                    request.Headers.Add(string.Format("x-metadata-{0}", key), value);
+                }
             }
+
 
             HttpWebResponse response = (HttpWebResponse)request.GetResponse();
 
@@ -53,40 +59,68 @@ namespace Unipluss.Sign.StorageService.Client
         {
             string url = string.Format("{0}File?ContainerName={1}&key={2}&filename={3}", _serviceUrl, _containerName,_secretKey,fileName);
             WebRequest request = base.CreateGetRequest(url);
+            try
+            {
+                HttpWebResponse response = (HttpWebResponse) request.GetResponse();
 
-            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                return response.StatusCode == HttpStatusCode.OK;
+            }
+            catch (System.Net.WebException ex)
+            {
+                HttpWebResponse res = (HttpWebResponse) ex.Response;
+                if (res.StatusCode == HttpStatusCode.NotFound)
+                    return false;
+                else
+                {
+                    throw ex;
+                }
+            }
 
-            return response.StatusCode == HttpStatusCode.OK;
+            return false;
         }
 
         public FileResponse DownloadFile(string fileName)
         {
             string url = string.Format("{0}File/Download?ContainerName={1}&key={2}&filename={3}", _serviceUrl, _containerName, _secretKey, fileName);
             WebRequest request = base.CreateGetRequest(url);
-         
-            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-
-            if (response.StatusCode == HttpStatusCode.OK)
+            
+            try
             {
-                var retur=new FileResponse(){MetaData = new NameValueCollection()};
-                using (Stream stream = response.GetResponseStream())
+                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+
+                if (response.StatusCode == HttpStatusCode.OK)
                 {
-                    using (var ms = new MemoryStream())
+                    var retur=new FileResponse(){MetaData = new NameValueCollection()};
+                    using (Stream stream = response.GetResponseStream())
                     {
-                        stream.CopyTo(ms);
-                        retur.Bytes = ms.ToArray();
-
-                        foreach (string key in response.Headers.AllKeys.Where(x=>x.StartsWith("x-metadata-")))
+                        using (var ms = new MemoryStream())
                         {
-                            var value = response.Headers[key];
-                            retur.MetaData.Add(key.Replace("x-metadata-",string.Empty),value);
-                        }
-                        retur.FileName = response.Headers["x-response-filename"];
-                        return retur;
+                            stream.CopyTo(ms);
+                            retur.Bytes = ms.ToArray();
 
+                            foreach (string key in response.Headers.AllKeys.Where(x=>x.StartsWith("x-metadata-")))
+                            {
+                                var value = response.Headers[key];
+                                retur.MetaData.Add(key.Replace("x-metadata-",string.Empty),value);
+                            }
+                            retur.FileName = response.Headers["x-response-filename"];
+                            return retur;
+
+                        }
                     }
-                }
             }
+            }
+           catch (System.Net.WebException ex)
+           {
+               HttpWebResponse res = (HttpWebResponse)ex.Response;
+               if (res.StatusCode == HttpStatusCode.NotFound)
+                   return null;
+               else
+               {
+                   throw ex;
+               }
+           }
+
             return null;
         }
     }

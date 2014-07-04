@@ -74,10 +74,14 @@ namespace Unipluss.Sign.StorageService.Server
         {
             var metapath = string.Format(@"{0}{1}\{2}\{3}.metadata", AppSettingsReader.RootFolder, account,
                 key, Path.GetFileName(filename).Replace(".", "_"));
-            var Metadata = Extensions.DeSerialize(metapath);
-            foreach (string headerKey in Metadata)
+
+            if (File.Exists(metapath))
             {
-                context.Response.Headers.Add(string.Format("x-metadata-{0}", headerKey), Metadata[headerKey]);
+                var Metadata = Extensions.DeSerialize(metapath);
+                foreach (string headerKey in Metadata)
+                {
+                    context.Response.Headers.Add(string.Format("x-metadata-{0}", headerKey), Metadata[headerKey]);
+                }
             }
         }
     }
