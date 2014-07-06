@@ -34,6 +34,13 @@ namespace Unipluss.Sign.StorageService.Test
               client = new StorageServiceClient(base.serviceUrl, AppSettingsReader.UrlToken, "test", key);
         }
 
+        [Test]
+        public void Test()
+        {
+          Assert.IsTrue(client.TestConnection());
+
+
+        }
   
 
         [Test]
@@ -44,6 +51,23 @@ namespace Unipluss.Sign.StorageService.Test
             var result = client.UploadFile(data, fileName1,metadata);
             Assert.IsTrue(result);
             
+
+        }
+
+        [Test]
+        public void UploadFileTestDeleteAndCheckThat_It_DoesNotExist_Afterwards()
+        {
+            var data = File.ReadAllBytes(fileName1);
+            var testFilename = string.Format("{0}.pdf", Guid.NewGuid().ToString("n"));
+            var result = client.UploadFile(data, testFilename, metadata);
+            Assert.IsTrue(result);
+
+            Assert.IsTrue(client.DoesFileExist(testFilename));
+
+            Assert.IsTrue(client.DeleteFile(testFilename));
+
+            Assert.IsFalse(client.DoesFileExist(testFilename));
+
 
         }
 

@@ -31,6 +31,14 @@ namespace Unipluss.Sign.StorageService.Test
         }
 
         [Test]
+        public void Test()
+        {
+            Assert.IsTrue(admin.TestConnection());
+
+
+        }
+
+        [Test]
         public void CreateContainerTest()
         {
             string containerName = Guid.NewGuid().ToString("n");
@@ -39,6 +47,20 @@ namespace Unipluss.Sign.StorageService.Test
 
             Console.WriteLine(result);
 
+        }
+
+        [Test]
+        public void CreateContainer_CheckThatExist_Then_Delete_CheckThatDoNotDelete_Test()
+        {
+            string containerName = Guid.NewGuid().ToString("n");
+            string result = admin.CreateContainer(containerName);
+            Assert.IsNotNullOrEmpty(result);
+
+            Assert.IsTrue(admin.DoesContainerExist(containerName));
+
+            Assert.IsTrue(admin.DeleteContainer(containerName));
+
+            Assert.IsFalse(admin.DoesContainerExist(containerName));
         }
 
         [Test]
