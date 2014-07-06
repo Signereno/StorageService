@@ -1,11 +1,12 @@
 ﻿using System;
+using System.IO;
 using System.Net;
 using System.Web;
 using Unipluss.Sign.StorageService.Server.Code;
 
 namespace Unipluss.Sign.StorageService.Server
 {
-    public class DoesFileExistsHandler : BaseAsyncHandler
+    public class DeleteFileHandler : BaseAsyncHandler
     {
         protected override void ServeContent(HttpContext context)
         {
@@ -25,20 +26,21 @@ namespace Unipluss.Sign.StorageService.Server
                 try
                 {
                     string path = string.Format(@"{0}{1}\{2}\{3}", AppSettingsReader.RootFolder, account,
-                        key,filename);
+                        key, filename);
                     if (
                         System.IO.File.Exists(path))
                     {
+                        File.Delete(path);
                         context.Response.StatusCode = (int)HttpStatusCode.OK;
                     }
                     else
                     {
-                        if (System.IO.Directory.Exists(string.Format(@"{0}{1}\{2}\", AppSettingsReader.RootFolder, account,key)))
+                        if (System.IO.Directory.Exists(string.Format(@"{0}{1}\{2}\", AppSettingsReader.RootFolder, account, key)))
                         {
                             context.Response.Write("File not found");
-                            context.Response.StatusCode = (int)HttpStatusCode.NotFound;   
+                            context.Response.StatusCode = (int)HttpStatusCode.NotFound;
                         }
-                        else  if (System.IO.Directory.Exists(string.Format(@"{0}{1}", AppSettingsReader.RootFolder, account)))
+                        else if (System.IO.Directory.Exists(string.Format(@"{0}{1}", AppSettingsReader.RootFolder, account)))
                         {
                             //context.Response.Headers.Add("path", string.Format(@"{0}{1}", AppSettingsReader.RootFolder, account));
                             context.Response.Write("Non authorized request");

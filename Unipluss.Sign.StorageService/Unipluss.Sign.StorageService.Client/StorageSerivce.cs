@@ -34,6 +34,15 @@ namespace Unipluss.Sign.StorageService.Client
             return request;
         }
 
+        protected WebRequest CreateDeleteRequest(string url)
+        {
+            WebRequest request = WebRequest.Create(url);
+            request.Method = "DELETE";
+            request.AddSecurityToken(_securityToken);
+
+            return request;
+        }
+
         protected WebRequest CreatePostRequest(string url,string fileCheckSum=null)
         {
             WebRequest request = WebRequest.Create(url);

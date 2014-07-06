@@ -46,6 +46,10 @@
     <Compile Include="App_Code\Code\Hash.cs" />
     <Compile Include="App_Code\Code\RandomStringGenerator.cs" />
     <Compile Include="App_Code\CreateContainerHandler.cs" />
+    <Compile Include="App_Code\DeleteContainerHandler.cs" />
+    <Compile Include="App_Code\DeleteFileHandler.cs" />
+    <Compile Include="App_Code\RootHandler.cs" />
+    <Compile Include="App_Code\TestHandler.cs" />
     <Compile Include="App_Code\DoesFileExistsHandler.cs" />
     <Compile Include="App_Code\GetContainerMetaDataHander.cs" />
     <Compile Include="App_Code\GetFileHandler.cs" />

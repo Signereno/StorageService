@@ -8,5 +8,7 @@ namespace Unipluss.Sign.StorageService.Client.interfaces
         bool DoesContainerExist(string containerName);
         string GetContainerKey(string containerName);
         NameValueCollection GetContainerMetaData(string containerName);
+        bool TestConnection();
+        bool DeleteContainer(string containerName);
     }
 }

@@ -79,6 +79,30 @@ namespace Unipluss.Sign.StorageService.Client
             return false;
         }
 
+        public bool DeleteFile(string fileName)
+        {
+            string url = string.Format("{0}File?ContainerName={1}&key={2}&filename={3}", _serviceUrl, _containerName, _secretKey, fileName);
+            WebRequest request = base.CreateDeleteRequest(url);
+            try
+            {
+                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+
+                return response.StatusCode == HttpStatusCode.OK;
+            }
+            catch (System.Net.WebException ex)
+            {
+                HttpWebResponse res = (HttpWebResponse)ex.Response;
+                if (res.StatusCode == HttpStatusCode.NotFound)
+                    return false;
+                else
+                {
+                    throw ex;
+                }
+            }
+
+            return false;
+        }
+
         public FileResponse DownloadFile(string fileName)
         {
             string url = string.Format("{0}File/Download?ContainerName={1}&key={2}&filename={3}", _serviceUrl, _containerName, _secretKey, fileName);
@@ -122,6 +146,30 @@ namespace Unipluss.Sign.StorageService.Client
            }
 
             return null;
+        }
+
+        public bool TestConnection()
+        {
+            string url = string.Format("{0}Test", _serviceUrl);
+            WebRequest request = base.CreateGetRequest(url);
+            try
+            {
+                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+
+                return response.StatusCode == HttpStatusCode.OK;
+            }
+            catch (System.Net.WebException ex)
+            {
+                HttpWebResponse res = (HttpWebResponse)ex.Response;
+                if (res.StatusCode == HttpStatusCode.NotFound)
+                    return false;
+                else
+                {
+                    throw ex;
+                }
+            }
+
+            return false;
         }
     }
 }

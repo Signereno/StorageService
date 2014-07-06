@@ -10,7 +10,11 @@ namespace Unipluss.Sign.StorageService.Client.interfaces
 
         bool DoesFileExist(string fileName);
 
+        bool DeleteFile(string fileName);
+
         FileResponse DownloadFile(string fileName);
+
+        bool TestConnection();
 
     }
 }

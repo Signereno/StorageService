@@ -155,5 +155,54 @@ namespace Unipluss.Sign.StorageService.Client
 
             return null;
         }
+
+        public bool TestConnection()
+        {
+            string url = string.Format("{0}Test", _serviceUrl);
+            WebRequest request = base.CreateGetRequest(url);
+            try
+            {
+                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+
+                return response.StatusCode == HttpStatusCode.OK;
+            }
+            catch (System.Net.WebException ex)
+            {
+                HttpWebResponse res = (HttpWebResponse)ex.Response;
+                if (res.StatusCode == HttpStatusCode.NotFound)
+                    return false;
+                else
+                {
+                    throw ex;
+                }
+            }
+
+            return false;
+        }
+
+        public bool DeleteContainer(string containerName)
+        {
+            string url = string.Format("{0}Admin/Container?ContainerName={1}&adminkey={2}", _serviceUrl, containerName, _adminkey);
+
+            WebRequest request = base.CreateDeleteRequest(url);
+            // If required by the server, set the credentials.
+            // Get the response.
+
+            request.ContentLength = 0;
+            try
+            {
+                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+
+                return response.StatusCode == HttpStatusCode.OK;
+             
+            }
+            catch (System.Net.WebException ex)
+            {
+                HttpWebResponse res = (HttpWebResponse)ex.Response;
+                throw new Exception(string.Format("Statuscode: {0} - {1}", res.StatusCode, res.StatusDescription));
+            }
+
+            return false;
+        }
     }
 }
