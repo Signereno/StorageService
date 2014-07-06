@@ -10,13 +10,10 @@ namespace Unipluss.Sign.StorageService.Server
     {
         protected override void ServeContent(HttpContext context)
         {
-      
-                
             try
             {
                     
-                if (
-                    System.IO.Directory.Exists(AppSettingsReader.RootFolder))
+                if ( System.IO.Directory.Exists(AppSettingsReader.RootFolder))
                 {
                     context.Response.Write("Rootfolder found");
                     context.Response.StatusCode = (int)HttpStatusCode.OK;
@@ -25,7 +22,6 @@ namespace Unipluss.Sign.StorageService.Server
                 {
                     context.Response.Write("Rootfolder not found");
                     context.Response.StatusCode = (int)HttpStatusCode.NotFound;
-                        
                 }
 
                 context.Response.End();

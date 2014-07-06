@@ -2,6 +2,7 @@
 using System.IO;
 using System.Net;
 using System.Web;
+using System.Web.UI.WebControls;
 using Unipluss.Sign.StorageService.Server.Code;
 
 namespace Unipluss.Sign.StorageService.Server
@@ -36,6 +37,10 @@ namespace Unipluss.Sign.StorageService.Server
                         AddMetaData(context, account, key, filename);
                         context.Response.Headers.Add("x-response-filename",filename);
                         context.Response.TransmitFile(path);
+                        context.Response.Headers.Add("Content-Type", MimeAssistant.GetMIMEType(filename));
+                        context.Response.Headers.Add("Content-Disposition", string.Format( "attachment; filename=\"{0}\"",filename));
+                        context.Response.Headers.Add("Content-Length" , new System.IO.FileInfo(path).Length.ToString());
+
                     }
                     else
                     {
