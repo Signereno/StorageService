@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <metadata>
+        <id>Signere.StorageService.Client</id>
+        <version>1.0.4</version>
+        <title>Signere.no Storage Service Client</title>
+        <authors>Signere.no</authors>
+        <owners>Signere.no</owners>
+        <iconUrl>http://files.signere.no/nuget/unipluss.sign.client.png</iconUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>Client that enables creation of accounts,  uploading files with metadata to the account, and download file with metadata from that account.</description>
+        <summary>.NET client for the Signere.no StorageService</summary>
+    </metadata>
+    <files>
+        <file src="..\Unipluss.Sign.StorageService.Client\bin\Release\Unipluss.Sign.StorageService.Client.dll" target="lib\net40\Unipluss.Sign.StorageService.Client.dll" />
+    </files>
+</package>

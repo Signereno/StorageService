@@ -31,6 +31,13 @@ namespace Unipluss.Sign.StorageService.Server
                         System.IO.File.Exists(path))
                     {
                         File.Delete(path);
+
+                        var metapath = string.Format(@"{0}{1}\{2}\{3}.metadata", AppSettingsReader.RootFolder, account,
+                            key, Path.GetFileName(filename).Replace(".", "_"));
+
+                        if(System.IO.File.Exists(metapath))
+                            File.Delete(metapath);
+
                         context.Response.StatusCode = (int)HttpStatusCode.OK;
                     }
                     else

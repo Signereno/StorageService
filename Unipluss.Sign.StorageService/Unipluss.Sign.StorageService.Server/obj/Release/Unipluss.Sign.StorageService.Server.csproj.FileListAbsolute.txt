@@ -4,3 +4,9 @@ C:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.
 C:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.Server\bin\Release\Newtonsoft.Json.xml
 C:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.Server\obj\Release\Unipluss.Sign.StorageService.Server.dll
 C:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.Server\obj\Release\Unipluss.Sign.StorageService.Server.pdb
+D:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.Server\bin\Release\Unipluss.Sign.StorageService.Server.dll
+D:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.Server\bin\Release\Unipluss.Sign.StorageService.Server.pdb
+D:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.Server\bin\Release\Newtonsoft.Json.dll
+D:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.Server\bin\Release\Newtonsoft.Json.xml
+D:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.Server\obj\Release\Unipluss.Sign.StorageService.Server.dll
+D:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.Server\obj\Release\Unipluss.Sign.StorageService.Server.pdb

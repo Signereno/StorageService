@@ -46,6 +46,7 @@
     <Compile Include="AdmintLiveTest.cs" />
     <Compile Include="AdmintTest.cs" />
     <Compile Include="BaseStorageServiceTest.cs" />
+    <Compile Include="ClientLiveTest.cs" />
     <Compile Include="ClientTest.cs" />
     <Compile Include="MiscTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
