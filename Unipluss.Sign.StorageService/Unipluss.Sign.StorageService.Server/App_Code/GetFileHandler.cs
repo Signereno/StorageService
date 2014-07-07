@@ -9,8 +9,6 @@ namespace Unipluss.Sign.StorageService.Server
 {
     public class GetFileHandler : BaseAsyncHandler
     {
-     
-
         /// <summary>
         /// You only have to modify this method.
         /// </summary>
@@ -40,7 +38,6 @@ namespace Unipluss.Sign.StorageService.Server
                         context.Response.Headers.Add("Content-Type", MimeAssistant.GetMIMEType(filename));
                         context.Response.Headers.Add("Content-Disposition", string.Format( "attachment; filename=\"{0}\"",filename));
                         context.Response.Headers.Add("Content-Length" , new System.IO.FileInfo(path).Length.ToString());
-
                     }
                     else
                     {

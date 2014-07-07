@@ -39,7 +39,6 @@ namespace Unipluss.Sign.StorageService.Server
                         }
                         else
                         {
-
                             SaveFile(context, path, filename);
                             SaveMetaData(context, path, filename);
                             context.Response.StatusCode = (int)HttpStatusCode.Created;
@@ -94,10 +93,13 @@ namespace Unipluss.Sign.StorageService.Server
                 context.Request.InputStream.CopyTo(ms);
                 var bytes = ms.ToArray();
                 if (Hash.GetSHA1(bytes).Equals(context.Request.Headers["filesha1"]))
-                File.WriteAllBytes(string.Format(@"{0}\{1}", path, filename),bytes );
+                {
+                    File.WriteAllBytes(string.Format(@"{0}\{1}", path, filename), bytes);
+                    return true;
+                }
             }
 
-            return true;
+            return false;
         }
 
         private static void SaveMetaData(HttpContext context, string path, string filename)

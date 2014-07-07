@@ -12,7 +12,7 @@ namespace Unipluss.Sign.StorageService.Server.Code
     public  static class AuthorizationHandler
     {
 
-        public static bool VerifyIfRequestIsAuthed(this HttpContext context,bool adminAccess=false)
+        public static bool VerifyIfRequestIsAuthed(HttpContext context,bool adminAccess=false)
         {
             context.Response.Headers["Server"] = "SignereStorage 1.0";
             var token = context.Request.Headers["token"];

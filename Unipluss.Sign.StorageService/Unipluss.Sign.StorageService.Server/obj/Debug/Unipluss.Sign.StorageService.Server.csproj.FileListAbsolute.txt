@@ -5,3 +5,9 @@ C:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.
 C:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.Server\obj\Debug\Unipluss.Sign.StorageService.Server.dll
 C:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.Server\obj\Debug\Unipluss.Sign.StorageService.Server.pdb
 C:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.Server\obj\Debug\Unipluss.Sign.StorageService.Server.csprojResolveAssemblyReference.cache
+D:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.Server\bin\Debug\Unipluss.Sign.StorageService.Server.dll
+D:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.Server\bin\Debug\Unipluss.Sign.StorageService.Server.pdb
+D:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.Server\bin\Debug\Newtonsoft.Json.dll
+D:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.Server\bin\Debug\Newtonsoft.Json.xml
+D:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.Server\obj\Debug\Unipluss.Sign.StorageService.Server.dll
+D:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.Server\obj\Debug\Unipluss.Sign.StorageService.Server.pdb

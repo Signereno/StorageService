@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Diagnostics;
 using System.IO;
@@ -12,15 +13,15 @@ namespace Unipluss.Sign.StorageService.Test
     [Ignore]
     public class AdmintLiveTest 
     {
-
+        private IList<string> containers=new List<string>();
         private IStorageServiceAdmin admin;
         private string fileName1 = "timestamptest.pdf";
 
         private string urltoken =
-            "BNsPmvn3SDsbsx9WEQ6LkM4c7wkxA6U5wk9zBteP9vjEmgrzmCkryd6yXfR6R47rTETuTKt2bFkNH6pvrrJ7r9dGJYsE3xLVpZ93KH3ubsRM7B9jVN7nTYSnXs8PrjaV";
+            "pFjWpfNwyfahFUpHvuEyaad7ySc4XQ2F7CbyUqcMXKZwr8k5TM2YfdqDx4JM8naLyp45FbFKZHNEevDHNzaUBshKdur5TdG7zVzWfbx5GB8DxY53WJgsL4AnmrVScfyn";
 
         private string adminkey =
-            "BthGmTxEn8E4ks6mmr7t5rx334A26mVdpx5CQWFcCrAUpc97P3NdyjPsccVE3YvYtyJCuWzgfKABASZzY4ENMUT6kXDY7HjfyNWF3vZjPdkvGmTepDdQCmTuQY7AZuJW";
+            "kf3EtUVFYG9sM23fgXT6WPxVE4teQwRueEfPLrwNNn3zyYkAMGxAzQWgSRm33exn9ZshDYkQYgbYaV2HDCxVaL7x2chULyyb6md8R7MtMp8pyu9xXH9gYvvUUfLV3VvF";
 
         private NameValueCollection metadata = new NameValueCollection()
         {
@@ -31,9 +32,7 @@ namespace Unipluss.Sign.StorageService.Test
         [SetUp]
         public void setup()
         {
-            admin = new StorageServiceAdmin("https://secure.signere.no/storage", urltoken,adminkey);
-            if (!Directory.Exists((Unipluss.Sign.StorageService.Server.Code.AppSettingsReader.RootFolder)))
-                Directory.CreateDirectory(Unipluss.Sign.StorageService.Server.Code.AppSettingsReader.RootFolder);
+            admin = new StorageServiceAdmin("https://secure.signere.no/storagetest", urltoken,adminkey);           
 
         }
 
@@ -41,6 +40,7 @@ namespace Unipluss.Sign.StorageService.Test
         public void CreateContainerTest()
         {
             string containerName = Guid.NewGuid().ToString("n");
+            containers.Add(containerName);
             string result = admin.CreateContainer(containerName);
             Assert.IsNotNullOrEmpty(result);
             Console.WriteLine("ContainerName: {0}",containerName);
@@ -49,6 +49,16 @@ namespace Unipluss.Sign.StorageService.Test
             Assert.IsTrue(admin.DoesContainerExist(containerName));
 
             Assert.AreEqual(result,admin.GetContainerKey(containerName));
+        }
+
+        [TearDown]
+        public void cleanup()
+        {
+            foreach (string container in containers)
+            {
+                admin.DeleteContainer(container);
+            }
+            containers=new List<string>();
         }
     }
 

@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Configuration;
+using System.IO;
 using NUnit.Framework;
 
 namespace Unipluss.Sign.StorageService.Test
@@ -6,7 +7,7 @@ namespace Unipluss.Sign.StorageService.Test
     [TestFixture]
     public class BaseStorageServiceTest
     {
-        protected string serviceUrl = "http://WIN-F6NMPNPRSJM/storage/";
+        protected string serviceUrl = ConfigurationManager.AppSettings["serviceurl"];
 
         [TearDown]
         public void cleanup()
