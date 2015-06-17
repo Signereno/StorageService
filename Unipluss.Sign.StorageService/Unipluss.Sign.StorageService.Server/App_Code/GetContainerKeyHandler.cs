@@ -9,16 +9,21 @@ namespace Unipluss.Sign.StorageService.Server
 {
     public class GetContainerKeyHandler : BaseAsyncHandler
     {
-
         protected override void ServeContent(HttpContext context)
         {
+            base.LogDebugInfo("GetContainerKeyHandler ServeContent");
+
             if (AuthorizationHandler.VerifyIfRequestIsAuthed(context, true))
             {
                 var account = context.Request.QueryString["containername"];
 
+                base.LogDebugInfo(string.Format("GetContainerKeyHandler, RequestIsAuthed, account: {0}", account));
+
                 if (!AuthorizationHandler.CheckIfFolderNameIsInvalid(account))
                 {
-                    context.Response.Write("Not valid containername");
+                    base.LogDebugInfo(string.Format("GetContainerKeyHandler, {0} not valid account", account));
+
+                    context.Response.Write("Not valid account");
                     context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
                     context.Response.End();
                     return;
@@ -26,45 +31,64 @@ namespace Unipluss.Sign.StorageService.Server
 
                 try
                 {
-                    var directories =
-                        Directory.GetDirectories(string.Format(@"{0}{1}", AppSettingsReader.RootFolder, account));
+                    var directories = Directory.GetDirectories(string.Format(@"{0}{1}", AppSettingsReader.RootFolder, account));
 
-                    if(directories==null || !directories.Any())
+                    if (directories == null || !directories.Any())
                         throw new DirectoryNotFoundException();
 
                     context.Response.AddHeader("Content-type", "text/plain; charset=utf-8");
-                    context.Response.Write(new DirectoryInfo(directories.FirstOrDefault()).Name);
+
+                    var directory = new DirectoryInfo(directories.FirstOrDefault()).Name;
+
+                    context.Response.Write(directory);
+
+                    base.LogDebugInfo(string.Format(@"GetContainerKeyHandler, Container key: {0}", directory));
+
                     context.Response.Headers.Add("GetContainerKeyHandler", "true");
-                    context.Response.StatusCode = (int) HttpStatusCode.OK;
+                    context.Response.StatusCode = (int)HttpStatusCode.OK;
                     context.Response.End();
                 }
-                catch (ArgumentException)
+                catch (ArgumentException e)
                 {
+                    base.LogError(context, e, "GetContainerKeyHandler, ArgumentException, Not valid containername");
+
                     context.Response.Write("Not valid containername");
-                    context.Response.StatusCode = (int) HttpStatusCode.BadRequest;
+                    context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
                     context.Response.End();
                 }
-                catch (DirectoryNotFoundException)
+                catch (DirectoryNotFoundException e)
                 {
+                    base.LogError(context, e, "GetContainerKeyHandler, DirectoryNotFoundException, Container not found");
+
                     context.Response.Write("Container not found");
                     context.Response.StatusCode = (int)HttpStatusCode.NotFound;
                     context.Response.End();
                 }
-                catch (System.IO.PathTooLongException)
+                catch (System.IO.PathTooLongException e)
                 {
-                    context.Response.Write("Root path in config to long, must me less than 160 characters including length of the filenames that will be used");
+                    base.LogError(context, e, "GetContainerKeyHandler, PathTooLongException, Root path in config to long, must be less than 160 characters including length of the filenames that will be used");
+
+                    context.Response.Write("Root path in config to long, must be less than 160 characters including length of the filenames that will be used");
                     context.Response.StatusCode = (int)HttpStatusCode.PreconditionFailed;
+                    context.Response.End();
+                }
+                catch (IOException e)
+                {
+                    base.LogError(context, e, "GetContainerKeyHandler, IOException");
+
+                    base.WriteExceptionIfDebug(context, e);
+                    context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
                     context.Response.End();
                 }
                 catch (Exception e)
                 {
+                    base.LogError(context, e, "GetContainerKeyHandler, Exception");
+
                     base.WriteExceptionIfDebug(context, e);
                     context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
                     context.Response.End();
                 }
             }
         }
-
-
     }
 }

@@ -10,16 +10,21 @@ namespace Unipluss.Sign.StorageService.Server
     {
         protected override void ServeContent(HttpContext context)
         {
+            base.LogDebugInfo("TestHandler ServeContent");
+
             try
             {
-                    
-                if ( System.IO.Directory.Exists(AppSettingsReader.RootFolder))
+                if (System.IO.Directory.Exists(AppSettingsReader.RootFolder))
                 {
+                    base.LogDebugInfo(string.Format("TestHandler, Rootfolder {0} found", AppSettingsReader.RootFolder));
+
                     context.Response.Write("Rootfolder found");
                     context.Response.StatusCode = (int)HttpStatusCode.OK;
                 }
                 else
                 {
+                    base.LogDebugInfo(string.Format("TestHandler, Rootfolder {0} not found", AppSettingsReader.RootFolder));
+
                     context.Response.Write("Rootfolder not found");
                     context.Response.StatusCode = (int)HttpStatusCode.NotFound;
                 }
@@ -28,18 +33,44 @@ namespace Unipluss.Sign.StorageService.Server
             }
             catch (ArgumentException e)
             {
-                base.WriteExceptionIfDebug(context, e); context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-                ;
+                base.LogError(context, e, "TestHandler, ArgumentException");
+
+                base.WriteExceptionIfDebug(context, e);
+                context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
                 context.Response.End();
             }
-            catch (Exception)
+            catch (DirectoryNotFoundException e)
             {
+                base.LogError(context, e, "TestHandler, DirectoryNotFoundException, Container not found");
+
+                context.Response.Write("Container not found");
+                context.Response.StatusCode = (int)HttpStatusCode.NotFound;
+                context.Response.End();
+            }
+            catch (System.IO.PathTooLongException e)
+            {
+                base.LogError(context, e, "TestHandler, PathTooLongException, Root path in config to long, must be less than 160 characters including length of the filenames that will be used");
+
+                context.Response.Write("Root path in config to long, must be less than 160 characters including length of the filenames that will be used");
+                context.Response.StatusCode = (int)HttpStatusCode.PreconditionFailed;
+                context.Response.End();
+            }
+            catch (IOException e)
+            {
+                base.LogError(context, e, "TestHandler, IOException");
+
+                base.WriteExceptionIfDebug(context, e);
+                context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                context.Response.End();
+            }
+            catch (Exception e)
+            {
+                base.LogError(context, e, "TestHandler, Exception");
+
                 context.Response.Write("Something went wrong");
                 context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                ;
                 context.Response.End();
             }
-            
         }
     }
 }

@@ -10,13 +10,10 @@ namespace Unipluss.Sign.StorageService.Server
     {
         protected override void ServeContent(HttpContext context)
         {
-      
-                context.Response.Write("<h2>Signere.no storageservice</h2>");
-                context.Response.StatusCode = (int)HttpStatusCode.OK;
-               
-                context.Response.End();
-            }
-            
+            context.Response.Write("<h2>Signere.no storageservice</h2>");
+            context.Response.StatusCode = (int)HttpStatusCode.OK;
+
+            context.Response.End();
         }
-    
+    }
 }

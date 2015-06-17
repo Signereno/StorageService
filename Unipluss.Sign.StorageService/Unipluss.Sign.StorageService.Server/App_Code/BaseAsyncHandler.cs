@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Web;
+using log4net;
 using Unipluss.Sign.StorageService.Server.Code;
 
 namespace Unipluss.Sign.StorageService.Server
 {
-    public  abstract class BaseAsyncHandler : IHttpAsyncHandler
+    public abstract class BaseAsyncHandler : IHttpAsyncHandler
     {
+        private static ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         protected abstract void ServeContent(HttpContext context);
         public void ProcessRequest(HttpContext context)
         {
@@ -13,6 +16,7 @@ namespace Unipluss.Sign.StorageService.Server
         }
 
         public bool IsReusable { get { return false; } }
+
         #region IHttpAsyncHandler Members
 
         private AsyncProcessorDelegate _Delegate;
@@ -31,12 +35,28 @@ namespace Unipluss.Sign.StorageService.Server
 
         #endregion
 
-        protected  void WriteExceptionIfDebug(HttpContext context, Exception e)
+        protected void WriteExceptionIfDebug(HttpContext context, Exception exception)
         {
             string response = "Something went wrong";
             if (AppSettingsReader.Debug)
-                response += Environment.NewLine+ e.ToString();
+                response += Environment.NewLine + exception.ToString();
             context.Response.Write(response);
+        }
+        
+        protected void LogError(HttpContext context, Exception exception, string message)
+        {
+            log.Error(
+                new
+                {
+                    Headers = context.Request.Headers,
+                    Url = context.Request.Url,
+                    message = message
+                }, exception);
+        }
+
+        protected void LogDebugInfo(string message)
+        {
+            log.Debug(message);
         }
     }
 }
