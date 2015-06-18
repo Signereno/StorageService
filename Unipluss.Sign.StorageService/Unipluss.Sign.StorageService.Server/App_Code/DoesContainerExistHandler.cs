@@ -37,21 +37,21 @@ namespace Unipluss.Sign.StorageService.Server
                       
                     }
 
-                    context.Response.End();
+                    context.ApplicationInstance.CompleteRequest();
                 }
                 catch (ArgumentException)
                 {
                     context.Response.Write("Not valid containername");
                     context.Response.StatusCode = (int) HttpStatusCode.BadRequest;
                     ;
-                    context.Response.End();
+                    context.ApplicationInstance.CompleteRequest();
                 }
                 catch (Exception e)
                 {
                     base.WriteExceptionIfDebug(context, e);
                     context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
                     
-                    context.Response.End();
+                    context.ApplicationInstance.CompleteRequest();
                 }
             }
 

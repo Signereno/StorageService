@@ -18,7 +18,7 @@ namespace Unipluss.Sign.StorageService.Server
                 {
                     context.Response.Write("Not valid containername");
                     context.Response.StatusCode = (int) HttpStatusCode.BadRequest;
-                    context.Response.End();
+                    context.ApplicationInstance.CompleteRequest();
                     return;
                 }
 
@@ -37,7 +37,7 @@ namespace Unipluss.Sign.StorageService.Server
                         context.Response.Write("Container not found");
                         context.Response.StatusCode = (int) HttpStatusCode.NotFound;
                     }
-                    context.Response.End();
+                    context.ApplicationInstance.CompleteRequest();
 
 
                 }
@@ -45,19 +45,19 @@ namespace Unipluss.Sign.StorageService.Server
                 {
                     context.Response.Write("Not valid containername");
                     context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-                    context.Response.End();
+                    context.ApplicationInstance.CompleteRequest();
                 }
                 catch (System.IO.PathTooLongException)
                 {
                     context.Response.Write("Root path in config to long, must me less than 160 characters including length of the filenames that will be used");
                     context.Response.StatusCode = (int)HttpStatusCode.PreconditionFailed;
-                    context.Response.End();
+                    context.ApplicationInstance.CompleteRequest();
                 }
                 catch (Exception e)
                 {
                     base.WriteExceptionIfDebug(context, e);
                     context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                    context.Response.End();
+                    context.ApplicationInstance.CompleteRequest();
                 }
             }
         }

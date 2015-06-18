@@ -31,7 +31,7 @@ namespace Unipluss.Sign.StorageService.Server.Code
             {
                 context.Response.Write("Timestamp is missing");
                 context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-                context.Response.End();
+                context.ApplicationInstance.CompleteRequest();
                 return false;
             }
             //2014-07-03T08:45:33.7403013Z
@@ -43,7 +43,7 @@ namespace Unipluss.Sign.StorageService.Server.Code
             {
                 context.Response.Write("Timestamp is not in ISO 8601 format.");
                 context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-                context.Response.End();
+                context.ApplicationInstance.CompleteRequest();
                 return false;
             }
 
@@ -52,7 +52,7 @@ namespace Unipluss.Sign.StorageService.Server.Code
             {
                 context.Response.Write(string.Format( "Timestamp have expired or out of sync with server clock. ({0})",DateTime.UtcNow.ToString("o", System.Globalization.CultureInfo.InvariantCulture)));
                 context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-                context.Response.End();
+                context.ApplicationInstance.CompleteRequest();
                 return false;
             }
            
@@ -61,7 +61,7 @@ namespace Unipluss.Sign.StorageService.Server.Code
             {
                 context.Response.Write("Non authorized request");
                 context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
-                context.Response.End();
+                context.ApplicationInstance.CompleteRequest();
                 return false;
             }
 
@@ -69,7 +69,7 @@ namespace Unipluss.Sign.StorageService.Server.Code
             {
                 context.Response.Write("Non authorized for admin request");
                 context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
-                context.Response.End();
+                context.ApplicationInstance.CompleteRequest();
                 return false;
             }
 

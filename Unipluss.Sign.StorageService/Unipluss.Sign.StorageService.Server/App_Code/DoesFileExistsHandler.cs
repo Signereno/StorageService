@@ -52,20 +52,20 @@ namespace Unipluss.Sign.StorageService.Server
 
                     }
 
-                    context.Response.End();
+                    context.ApplicationInstance.CompleteRequest();
                 }
                 catch (ArgumentException e)
                 {
                     base.WriteExceptionIfDebug(context, e); context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
                     ;
-                    context.Response.End();
+                    context.ApplicationInstance.CompleteRequest();
                 }
                 catch (Exception)
                 {
                     context.Response.Write("Something went wrong");
                     context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
                     ;
-                    context.Response.End();
+                    context.ApplicationInstance.CompleteRequest();
                 }
             }
         }

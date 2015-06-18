@@ -20,6 +20,8 @@ namespace Unipluss.Sign.StorageService.Server
                 var key = context.Request.QueryString["key"];
                 var filename = context.Request.QueryString["filename"];
 
+               
+
                 if (!AuthorizationHandler.CheckIfFilenameIsValid(filename))
                 {
                     context.Response.Write("Not valid filename");
@@ -34,10 +36,33 @@ namespace Unipluss.Sign.StorageService.Server
                     {
                         AddMetaData(context, account, key, filename);
                         context.Response.Headers.Add("x-response-filename",filename);
-                        context.Response.TransmitFile(path);
+
                         context.Response.Headers.Add("Content-Type", MimeAssistant.GetMIMEType(filename));
-                        context.Response.Headers.Add("Content-Disposition", string.Format( "attachment; filename=\"{0}\"",filename));
-                        context.Response.Headers.Add("Content-Length" , new System.IO.FileInfo(path).Length.ToString());
+                        context.Response.Headers.Add("Content-Disposition", string.Format("attachment; filename=\"{0}\"", filename));
+                        context.Response.Headers.Add("Content-Length", new System.IO.FileInfo(path).Length.ToString());
+
+
+                        TimeSpan freshness = new TimeSpan(1, 0, 0, 60);
+                        context.Response.Cache.SetExpires(DateTime.Now.Add(freshness));
+                        context.Response.Cache.SetMaxAge(freshness);
+                        context.Response.Cache.SetCacheability(HttpCacheability.Public);
+                        context.Response.Cache.SetValidUntilExpires(true);
+                        context.Response.Cache.VaryByParams["*"] = true;
+
+
+                        int chunkSize = 64;
+                        byte[] buffer = new byte[chunkSize];
+                        int offset = 0;
+                        int read = 0;
+                        using (FileStream fs = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.Read))
+                        {
+                            while ((read = fs.Read(buffer, offset, chunkSize)) > 0)
+                            {
+                                context.Response.OutputStream.Write(buffer, 0, read);
+                                context.Response.Flush();
+                            }
+                        }
+
                     }
                     else
                     {
@@ -53,21 +78,25 @@ namespace Unipluss.Sign.StorageService.Server
 
                     }
 
-                    context.Response.End();
+                    // Prevents any other content from being sent to the browser
+                    context.Response.SuppressContent = true;
+                    
+                    // Directs the thread to finish, bypassing additional processing
+                    context.ApplicationInstance.CompleteRequest();
                 }
                 catch (ArgumentException)
                 {
                     context.Response.Write("Not valid containername");
                     context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
                     ;
-                    context.Response.End();
+                    context.ApplicationInstance.CompleteRequest();
                 }
                 catch (Exception)
                 {
                     context.Response.Write("Something went wrong");
                     context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
                     ;
-                    context.Response.End();
+                    context.ApplicationInstance.CompleteRequest();
                 }
             }
         }
