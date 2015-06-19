@@ -12,13 +12,11 @@ namespace Unipluss.Sign.StorageService.Server
     {
         protected override void ServeContent(HttpContext context)
         {
-            base.LogDebugInfo("GetContainerMetaDataHander ServeContent");
-
             if (AuthorizationHandler.VerifyIfRequestIsAuthed(context, true))
             {
                 var account = context.Request.QueryString["containername"];
 
-                base.LogDebugInfo(string.Format("GetContainerMetaDataHander, RequestIsAuthed, account: {0}", account));
+                base.LogDebugInfo(string.Format("GetContainerMetaDataHander, account: {0}", account));
 
                 if (!AuthorizationHandler.CheckIfFolderNameIsInvalid(account))
                 {
@@ -26,7 +24,7 @@ namespace Unipluss.Sign.StorageService.Server
 
                     context.Response.Write("Not valid containername");
                     context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-                    context.Response.End();
+                    context.ApplicationInstance.CompleteRequest();
                     return;
                 }
 
@@ -34,51 +32,53 @@ namespace Unipluss.Sign.StorageService.Server
                 {
                     var metadata = AddMetaData(context, account);
 
-                    base.LogDebugInfo(string.Format(@"GetContainerMetaDataHander, Container metadata: {0}", string.Join(",", metadata.Cast<string>().Select(e => string.Format("{0}={1}", e, metadata[e])))));
+                    base.LogDebugInfo(string.Format(@"GetContainerMetaDataHander, Container metadata: {0}",
+                        string.Join(",", metadata.Cast<string>().Select(e => string.Format("{0}={1}", e, metadata[e])))));
 
                     context.Response.Headers.Add("GetContainerMetaDataHander", "true");
-                    context.Response.StatusCode = (int)HttpStatusCode.OK;
-                    context.Response.End();
+                    context.Response.StatusCode = (int) HttpStatusCode.OK;
                 }
                 catch (ArgumentException e)
                 {
                     base.LogError(context, e, "GetContainerMetaDataHander, ArgumentException, Not valid containername");
 
                     context.Response.Write("Not valid containername");
-                    context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-                    context.Response.End();
+                    context.Response.StatusCode = (int) HttpStatusCode.BadRequest;
                 }
                 catch (DirectoryNotFoundException e)
                 {
-                    base.LogError(context, e, "GetContainerMetaDataHander, DirectoryNotFoundException, Container not found");
+                    base.LogError(context, e,
+                        "GetContainerMetaDataHander, DirectoryNotFoundException, Container not found");
 
                     context.Response.Write("Container not found");
-                    context.Response.StatusCode = (int)HttpStatusCode.NotFound;
-                    context.Response.End();
+                    context.Response.StatusCode = (int) HttpStatusCode.NotFound;
                 }
                 catch (System.IO.PathTooLongException e)
                 {
-                    base.LogError(context, e, "GetContainerMetaDataHander, PathTooLongException, Root path in config to long, must be less than 160 characters including length of the filenames that will be used");
+                    base.LogError(context, e,
+                        "GetContainerMetaDataHander, PathTooLongException, Root path in config to long, must be less than 160 characters including length of the filenames that will be used");
 
-                    context.Response.Write("Root path in config to long, must be less than 160 characters including length of the filenames that will be used");
-                    context.Response.StatusCode = (int)HttpStatusCode.PreconditionFailed;
-                    context.Response.End();
+                    context.Response.Write(
+                        "Root path in config to long, must be less than 160 characters including length of the filenames that will be used");
+                    context.Response.StatusCode = (int) HttpStatusCode.PreconditionFailed;
                 }
                 catch (IOException e)
                 {
                     base.LogError(context, e, "GetContainerMetaDataHander, IOException");
 
                     base.WriteExceptionIfDebug(context, e);
-                    context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-                    context.Response.End();
+                    context.Response.StatusCode = (int) HttpStatusCode.BadRequest;
                 }
                 catch (Exception e)
                 {
                     base.LogError(context, e, "GetContainerMetaDataHander, Exception");
 
                     base.WriteExceptionIfDebug(context, e);
-                    context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                    context.Response.End();
+                    context.Response.StatusCode = (int) HttpStatusCode.InternalServerError;
+                }
+                finally
+                {
+                    context.ApplicationInstance.CompleteRequest();
                 }
             }
         }
@@ -86,7 +86,7 @@ namespace Unipluss.Sign.StorageService.Server
         {
             var metapath = string.Format(@"{0}{1}\container.metadata", AppSettingsReader.RootFolder, account);
 
-            if (!File.Exists(metapath)) 
+            if (!File.Exists(metapath))
                 return new NameValueCollection();
 
             var metadata = Extensions.DeSerialize(metapath);

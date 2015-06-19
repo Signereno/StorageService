@@ -32,3 +32,4 @@ D:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.
 D:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.Test\obj\Release\Unipluss.Sign.StorageService.Test.pdb
 D:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.Test\bin\Release\log4net.dll
 D:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.Test\bin\Release\log4net.xml
+D:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.Test\bin\Release\test.pdf

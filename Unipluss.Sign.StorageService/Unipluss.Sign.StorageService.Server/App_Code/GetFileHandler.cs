@@ -15,15 +15,13 @@ namespace Unipluss.Sign.StorageService.Server
         /// </summary>
         protected override void ServeContent(HttpContext context)
         {
-            base.LogDebugInfo("GetFileHandler ServeContent");
-
             if (AuthorizationHandler.VerifyIfRequestIsAuthed(context))
             {
                 var account = context.Request.QueryString["containername"];
                 var key = context.Request.QueryString["key"];
                 var filename = context.Request.QueryString["filename"];
 
-                base.LogDebugInfo(string.Format("GetFileHandler, RequestIsAuthed, account: {0}, key: {1}, filename: {2}", account, key, filename));
+                base.LogDebugInfo(string.Format("GetFileHandler, account: {0}, key: {1}, filename: {2}", account, key, filename));
 
                 if (!AuthorizationHandler.CheckIfFilenameIsValid(filename))
                 {
@@ -31,6 +29,7 @@ namespace Unipluss.Sign.StorageService.Server
 
                     context.Response.Write("Not valid filename");
                     context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    context.ApplicationInstance.CompleteRequest();
                     return;
                 }
 
@@ -47,9 +46,20 @@ namespace Unipluss.Sign.StorageService.Server
                         base.LogDebugInfo(string.Format(@"GetFileHandler, File metadata: {0}", string.Join(",", metadata.Cast<string>().Select(e => string.Format("{0}={1}", e, metadata[e])))));
 
                         context.Response.Headers.Add("x-response-filename", filename);
-                        context.Response.TransmitFile(path);
 
-                        base.LogDebugInfo(string.Format(@"GetFileHandler, File {0} transmitted", path));
+                        TimeSpan freshness = new TimeSpan(1, 0, 0, 60);
+                        context.Response.Cache.SetExpires(DateTime.Now.Add(freshness));
+                        context.Response.Cache.SetMaxAge(freshness);
+                        context.Response.Cache.SetCacheability(HttpCacheability.Public);
+                        context.Response.Cache.SetValidUntilExpires(true);
+                        context.Response.Cache.VaryByParams["*"] = true;
+
+                        using (FileStream fs = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.Read))
+                        {
+                            fs.CopyTo(context.Response.OutputStream);
+                        }
+
+                        base.LogDebugInfo(string.Format(@"GetFileHandler, File {0} written to response", path));
 
                         context.Response.Headers.Add("Content-Type", MimeAssistant.GetMIMEType(filename));
                         context.Response.Headers.Add("Content-Disposition", string.Format("attachment; filename=\"{0}\"", filename));
@@ -81,8 +91,6 @@ namespace Unipluss.Sign.StorageService.Server
                             context.Response.StatusCode = (int)HttpStatusCode.NotFound;
                         }
                     }
-
-                    context.Response.End();
                 }
                 catch (ArgumentException e)
                 {
@@ -90,7 +98,6 @@ namespace Unipluss.Sign.StorageService.Server
 
                     context.Response.Write("Not valid containername");
                     context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-                    context.Response.End();
                 }
                 catch (System.IO.PathTooLongException e)
                 {
@@ -98,7 +105,6 @@ namespace Unipluss.Sign.StorageService.Server
 
                     context.Response.Write("Root path in config to long, must be less than 160 characters including length of the filenames that will be used");
                     context.Response.StatusCode = (int)HttpStatusCode.PreconditionFailed;
-                    context.Response.End();
                 }
                 catch (IOException e)
                 {
@@ -106,7 +112,6 @@ namespace Unipluss.Sign.StorageService.Server
 
                     base.WriteExceptionIfDebug(context, e);
                     context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-                    context.Response.End();
                 }
                 catch (Exception e)
                 {
@@ -114,7 +119,10 @@ namespace Unipluss.Sign.StorageService.Server
 
                     base.WriteExceptionIfDebug(context, e);
                     context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                    context.Response.End();
+                }
+                finally
+                {
+                    context.ApplicationInstance.CompleteRequest();
                 }
             }
         }

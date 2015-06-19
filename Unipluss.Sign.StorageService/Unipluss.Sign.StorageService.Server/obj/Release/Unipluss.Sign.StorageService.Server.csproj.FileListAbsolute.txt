@@ -12,3 +12,4 @@ D:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.
 D:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.Server\bin\Newtonsoft.Json.dll
 D:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.Server\bin\log4net.xml
 D:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.Server\bin\Newtonsoft.Json.xml
+D:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.Server\obj\Release\Unipluss.Sign.StorageService.Server.csprojResolveAssemblyReference.cache

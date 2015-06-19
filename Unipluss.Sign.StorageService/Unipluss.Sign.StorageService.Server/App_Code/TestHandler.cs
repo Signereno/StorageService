@@ -10,8 +10,6 @@ namespace Unipluss.Sign.StorageService.Server
     {
         protected override void ServeContent(HttpContext context)
         {
-            base.LogDebugInfo("TestHandler ServeContent");
-
             try
             {
                 if (System.IO.Directory.Exists(AppSettingsReader.RootFolder))
@@ -28,8 +26,6 @@ namespace Unipluss.Sign.StorageService.Server
                     context.Response.Write("Rootfolder not found");
                     context.Response.StatusCode = (int)HttpStatusCode.NotFound;
                 }
-
-                context.Response.End();
             }
             catch (ArgumentException e)
             {
@@ -37,7 +33,6 @@ namespace Unipluss.Sign.StorageService.Server
 
                 base.WriteExceptionIfDebug(context, e);
                 context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-                context.Response.End();
             }
             catch (DirectoryNotFoundException e)
             {
@@ -45,7 +40,6 @@ namespace Unipluss.Sign.StorageService.Server
 
                 context.Response.Write("Container not found");
                 context.Response.StatusCode = (int)HttpStatusCode.NotFound;
-                context.Response.End();
             }
             catch (System.IO.PathTooLongException e)
             {
@@ -53,7 +47,6 @@ namespace Unipluss.Sign.StorageService.Server
 
                 context.Response.Write("Root path in config to long, must be less than 160 characters including length of the filenames that will be used");
                 context.Response.StatusCode = (int)HttpStatusCode.PreconditionFailed;
-                context.Response.End();
             }
             catch (IOException e)
             {
@@ -61,7 +54,6 @@ namespace Unipluss.Sign.StorageService.Server
 
                 base.WriteExceptionIfDebug(context, e);
                 context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-                context.Response.End();
             }
             catch (Exception e)
             {
@@ -69,7 +61,10 @@ namespace Unipluss.Sign.StorageService.Server
 
                 context.Response.Write("Something went wrong");
                 context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                context.Response.End();
+            }
+            finally
+            {
+                context.ApplicationInstance.CompleteRequest();
             }
         }
     }

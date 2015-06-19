@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 using NUnit.Framework;
 using Unipluss.Sign.StorageService.Client;
 using Unipluss.Sign.StorageService.Client.interfaces;
@@ -16,6 +18,7 @@ namespace Unipluss.Sign.StorageService.Test
 
         private IStorageServiceClient client;
         private string fileName1 = "timestamptest.pdf";
+        private string fileName1MB = "test.pdf";
 
         private NameValueCollection metadata = new NameValueCollection()
         {
@@ -52,6 +55,44 @@ namespace Unipluss.Sign.StorageService.Test
             Assert.IsTrue(result);
             
 
+        }
+
+        [Test]
+        public void UploadAndDownloadMultipleFilesTest()
+        {
+            var data = File.ReadAllBytes(fileName1MB);
+
+            var tasks = new List<Task>();
+
+            // Create new stopwatch
+            Stopwatch stopwatch = new Stopwatch();
+
+            // Begin timing
+            stopwatch.Start();
+
+            for (int i = 0; i < 1000; i++)
+            {
+                var filename = fileName1 + i;
+                // Do something
+                tasks.Add(Task.Factory.StartNew(() =>
+                {
+                    
+                    var uploadresult = client.UploadFile(data, filename, metadata);
+                    Assert.IsTrue(uploadresult);
+
+                    Assert.IsTrue(client.DoesFileExist(filename));
+
+                    var downloadresult = client.DownloadFile(filename);
+                    Assert.IsNotNull(downloadresult, "Download file");
+                }));
+            }
+            Task.WaitAll(tasks.ToArray());
+
+            // Stop timing
+            stopwatch.Stop();
+
+            // Write result
+            Console.WriteLine("Time elapsed: {0}", stopwatch.Elapsed);
         }
 
         [Test]

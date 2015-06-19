@@ -11,13 +11,11 @@ namespace Unipluss.Sign.StorageService.Server
     {
         protected override void ServeContent(HttpContext context)
         {
-            base.LogDebugInfo("GetContainerKeyHandler ServeContent");
-
             if (AuthorizationHandler.VerifyIfRequestIsAuthed(context, true))
             {
                 var account = context.Request.QueryString["containername"];
 
-                base.LogDebugInfo(string.Format("GetContainerKeyHandler, RequestIsAuthed, account: {0}", account));
+                base.LogDebugInfo(string.Format("GetContainerKeyHandler, account: {0}", account));
 
                 if (!AuthorizationHandler.CheckIfFolderNameIsInvalid(account))
                 {
@@ -25,13 +23,14 @@ namespace Unipluss.Sign.StorageService.Server
 
                     context.Response.Write("Not valid account");
                     context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-                    context.Response.End();
+                    context.ApplicationInstance.CompleteRequest();
                     return;
                 }
 
                 try
                 {
-                    var directories = Directory.GetDirectories(string.Format(@"{0}{1}", AppSettingsReader.RootFolder, account));
+                    var directories =
+                        Directory.GetDirectories(string.Format(@"{0}{1}", AppSettingsReader.RootFolder, account));
 
                     if (directories == null || !directories.Any())
                         throw new DirectoryNotFoundException();
@@ -46,7 +45,6 @@ namespace Unipluss.Sign.StorageService.Server
 
                     context.Response.Headers.Add("GetContainerKeyHandler", "true");
                     context.Response.StatusCode = (int)HttpStatusCode.OK;
-                    context.Response.End();
                 }
                 catch (ArgumentException e)
                 {
@@ -54,7 +52,6 @@ namespace Unipluss.Sign.StorageService.Server
 
                     context.Response.Write("Not valid containername");
                     context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-                    context.Response.End();
                 }
                 catch (DirectoryNotFoundException e)
                 {
@@ -62,15 +59,15 @@ namespace Unipluss.Sign.StorageService.Server
 
                     context.Response.Write("Container not found");
                     context.Response.StatusCode = (int)HttpStatusCode.NotFound;
-                    context.Response.End();
                 }
                 catch (System.IO.PathTooLongException e)
                 {
-                    base.LogError(context, e, "GetContainerKeyHandler, PathTooLongException, Root path in config to long, must be less than 160 characters including length of the filenames that will be used");
+                    base.LogError(context, e,
+                        "GetContainerKeyHandler, PathTooLongException, Root path in config to long, must be less than 160 characters including length of the filenames that will be used");
 
-                    context.Response.Write("Root path in config to long, must be less than 160 characters including length of the filenames that will be used");
+                    context.Response.Write(
+                        "Root path in config to long, must be less than 160 characters including length of the filenames that will be used");
                     context.Response.StatusCode = (int)HttpStatusCode.PreconditionFailed;
-                    context.Response.End();
                 }
                 catch (IOException e)
                 {
@@ -78,7 +75,6 @@ namespace Unipluss.Sign.StorageService.Server
 
                     base.WriteExceptionIfDebug(context, e);
                     context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-                    context.Response.End();
                 }
                 catch (Exception e)
                 {
@@ -86,7 +82,10 @@ namespace Unipluss.Sign.StorageService.Server
 
                     base.WriteExceptionIfDebug(context, e);
                     context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                    context.Response.End();
+                }
+                finally
+                {
+                    context.ApplicationInstance.CompleteRequest();
                 }
             }
         }

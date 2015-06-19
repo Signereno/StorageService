@@ -10,14 +10,12 @@ namespace Unipluss.Sign.StorageService.Server
     {
         protected override void ServeContent(HttpContext context)
         {
-            base.LogDebugInfo("DoesContainerExistHandler ServeContent");
-
             if (AuthorizationHandler.VerifyIfRequestIsAuthed(context, true))
             {
                 var account = context.Request.QueryString["containername"];
                 var key = context.Request.QueryString["key"];
 
-                base.LogDebugInfo(string.Format("DoesContainerExistHandler, RequestIsAuthed, account: {0}, key: {1}", account, key));
+                base.LogDebugInfo(string.Format("DoesContainerExistHandler, account: {0}, key: {1}", account, key));
 
                 try
                 {
@@ -28,7 +26,7 @@ namespace Unipluss.Sign.StorageService.Server
                         base.LogDebugInfo(string.Format("DoesContainerExistHandler, Directory {0} exists", path));
 
                         context.Response.Headers.Add("DoesContainerExistHandler", "true");
-                        context.Response.StatusCode = (int)HttpStatusCode.OK;
+                        context.Response.StatusCode = (int) HttpStatusCode.OK;
                     }
                     else
                     {
@@ -36,53 +34,55 @@ namespace Unipluss.Sign.StorageService.Server
 
                         if (System.IO.Directory.Exists(string.Format(@"{0}{1}", AppSettingsReader.RootFolder, account)))
                         {
-                            base.LogDebugInfo(string.Format(@"DoesContainerExistHandler, Non authorized request {0}{1}", AppSettingsReader.RootFolder, account));
+                            base.LogDebugInfo(string.Format(
+                                @"DoesContainerExistHandler, Non authorized request {0}{1}",
+                                AppSettingsReader.RootFolder, account));
 
                             context.Response.Write("Non authorized request");
-                            context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                            context.Response.StatusCode = (int) HttpStatusCode.Unauthorized;
                         }
                         else
                         {
                             base.LogDebugInfo("DoesContainerExistHandler, Container not found");
 
                             context.Response.Write("Container not found");
-                            context.Response.StatusCode = (int)HttpStatusCode.NotFound;
+                            context.Response.StatusCode = (int) HttpStatusCode.NotFound;
                         }
                     }
-
-                    context.Response.End();
                 }
                 catch (ArgumentException e)
                 {
                     base.LogError(context, e, "DoesContainerExistHandler, ArgumentException");
 
                     base.WriteExceptionIfDebug(context, e);
-                    context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-                    context.Response.End();
+                    context.Response.StatusCode = (int) HttpStatusCode.BadRequest;
                 }
                 catch (System.IO.PathTooLongException e)
                 {
-                    base.LogError(context, e, "DoesContainerExistHandler, PathTooLongException, Root path in config to long, must be less than 160 characters including length of the filenames that will be used");
+                    base.LogError(context, e,
+                        "DoesContainerExistHandler, PathTooLongException, Root path in config to long, must be less than 160 characters including length of the filenames that will be used");
 
-                    context.Response.Write("Root path in config to long, must be less than 160 characters including length of the filenames that will be used");
-                    context.Response.StatusCode = (int)HttpStatusCode.PreconditionFailed;
-                    context.Response.End();
+                    context.Response.Write(
+                        "Root path in config to long, must be less than 160 characters including length of the filenames that will be used");
+                    context.Response.StatusCode = (int) HttpStatusCode.PreconditionFailed;
                 }
                 catch (IOException e)
                 {
                     base.LogError(context, e, "DoesContainerExistHandler, IOException");
 
                     base.WriteExceptionIfDebug(context, e);
-                    context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-                    context.Response.End();
+                    context.Response.StatusCode = (int) HttpStatusCode.BadRequest;
                 }
                 catch (Exception e)
                 {
                     base.LogError(context, e, "DoesContainerExistHandler, Exception");
 
                     base.WriteExceptionIfDebug(context, e);
-                    context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                    context.Response.End();
+                    context.Response.StatusCode = (int) HttpStatusCode.InternalServerError;
+                }
+                finally
+                {
+                    context.ApplicationInstance.CompleteRequest();
                 }
             }
         }

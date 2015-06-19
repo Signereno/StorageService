@@ -12,8 +12,7 @@ namespace Unipluss.Sign.StorageService.Server
         {
             context.Response.Write("<h2>Signere.no storageservice</h2>");
             context.Response.StatusCode = (int)HttpStatusCode.OK;
-
-            context.Response.End();
+            context.ApplicationInstance.CompleteRequest();
         }
     }
 }

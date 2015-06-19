@@ -12,13 +12,11 @@ namespace Unipluss.Sign.StorageService.Server
     {
         protected override void ServeContent(HttpContext context)
         {
-            base.LogDebugInfo("CreateContainerHandler, ServeContent");
-
             if (AuthorizationHandler.VerifyIfRequestIsAuthed(context, true))
             {
                 var account = context.Request.QueryString["containername"];
 
-                base.LogDebugInfo(string.Format("CreateContainerHandler, RequestIsAuthed, account: {0}", account));
+                base.LogDebugInfo(string.Format("CreateContainerHandler, account: {0}", account));
 
                 if (!AuthorizationHandler.CheckIfFolderNameIsInvalid(account))
                 {
@@ -26,7 +24,7 @@ namespace Unipluss.Sign.StorageService.Server
 
                     context.Response.Write("Not valid containername");
                     context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-                    context.Response.End();
+                    context.ApplicationInstance.CompleteRequest();
                     return;
                 }
 
@@ -50,7 +48,6 @@ namespace Unipluss.Sign.StorageService.Server
                     context.Response.Write(key);
                     context.Response.Headers.Add("test", "test");
                     context.Response.StatusCode = (int)HttpStatusCode.Created;
-                    context.Response.End();
                 }
                 catch (ArgumentException e)
                 {
@@ -58,7 +55,6 @@ namespace Unipluss.Sign.StorageService.Server
 
                     context.Response.Write("Not valid containername");
                     context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-                    context.Response.End();
                 }
                 catch (System.IO.PathTooLongException e)
                 {
@@ -66,7 +62,6 @@ namespace Unipluss.Sign.StorageService.Server
 
                     context.Response.Write("Root path in config to long, must be less than 160 characters including length of the filenames that will be used");
                     context.Response.StatusCode = (int)HttpStatusCode.PreconditionFailed;
-                    context.Response.End();
                 }
                 catch (IOException e)
                 {
@@ -74,7 +69,6 @@ namespace Unipluss.Sign.StorageService.Server
 
                     base.WriteExceptionIfDebug(context, e);
                     context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-                    context.Response.End();
                 }
                 catch (Exception e)
                 {
@@ -82,7 +76,10 @@ namespace Unipluss.Sign.StorageService.Server
 
                     base.WriteExceptionIfDebug(context, e);
                     context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                    context.Response.End();
+                }
+                finally
+                {
+                    context.ApplicationInstance.CompleteRequest();
                 }
             }
         }

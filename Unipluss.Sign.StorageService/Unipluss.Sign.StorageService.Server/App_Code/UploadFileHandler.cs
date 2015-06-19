@@ -12,15 +12,13 @@ namespace Unipluss.Sign.StorageService.Server
     {
         protected override void ServeContent(HttpContext context)
         {
-            base.LogDebugInfo("UploadFileHandler ServeContent");
-
             if (AuthorizationHandler.VerifyIfRequestIsAuthed(context))
             {
                 var account = context.Request.QueryString["containername"];
                 var key = context.Request.QueryString["key"];
                 var filename = context.Request.QueryString["filename"];
 
-                base.LogDebugInfo(string.Format("UploadFileHandler, RequestIsAuthed, account: {0}, key: {1}, filename: {2}", account, key, filename));
+                base.LogDebugInfo(string.Format("UploadFileHandler, account: {0}, key: {1}, filename: {2}", account, key, filename));
 
                 if (!AuthorizationHandler.CheckIfFilenameIsValid(filename))
                 {
@@ -28,7 +26,7 @@ namespace Unipluss.Sign.StorageService.Server
 
                     context.Response.Write("Not valid filename");
                     context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-                    context.Response.End();
+                    context.ApplicationInstance.CompleteRequest();
                     return;
                 }
 
@@ -55,10 +53,17 @@ namespace Unipluss.Sign.StorageService.Server
 
                                 var metadata = SaveMetaData(context, path, filename);
 
-                                base.LogDebugInfo(string.Format(@"UploadFileHandler, File {0}\{1} metadata {2} saved", path, filename,
-                                    string.Join(",", metadata.Cast<string>().Select(e => string.Format("{0}={1}", e, metadata[e])))));
+                                base.LogDebugInfo(string.Format(@"UploadFileHandler, File {0}\{1} metadata {2} saved",
+                                    path, filename,
+                                    string.Join(",",
+                                        metadata.Cast<string>().Select(e => string.Format("{0}={1}", e, metadata[e])))));
 
                                 context.Response.StatusCode = (int)HttpStatusCode.Created;
+                            }
+                            else
+                            {
+                                base.LogDebugInfo(string.Format(@"UploadFileHandler, File {0}\{1} NOT saved", path, filename));
+                                context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
                             }
                         }
                     }
@@ -81,8 +86,6 @@ namespace Unipluss.Sign.StorageService.Server
                             context.Response.StatusCode = (int)HttpStatusCode.NotFound;
                         }
                     }
-
-                    context.Response.End();
                 }
                 catch (ArgumentException e)
                 {
@@ -90,7 +93,6 @@ namespace Unipluss.Sign.StorageService.Server
 
                     context.Response.Write("Not valid containername");
                     context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-                    context.Response.End();
                 }
                 catch (System.IO.PathTooLongException e)
                 {
@@ -98,7 +100,6 @@ namespace Unipluss.Sign.StorageService.Server
 
                     context.Response.Write("Root path in config to long, must be less than 160 characters including length of the filenames that will be used");
                     context.Response.StatusCode = (int)HttpStatusCode.PreconditionFailed;
-                    context.Response.End();
                 }
                 catch (IOException e)
                 {
@@ -106,7 +107,6 @@ namespace Unipluss.Sign.StorageService.Server
 
                     base.WriteExceptionIfDebug(context, e);
                     context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-                    context.Response.End();
                 }
                 catch (Exception e)
                 {
@@ -114,7 +114,10 @@ namespace Unipluss.Sign.StorageService.Server
 
                     base.WriteExceptionIfDebug(context, e);
                     context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                    context.Response.End();
+                }
+                finally
+                {
+                    context.ApplicationInstance.CompleteRequest();
                 }
             }
         }
@@ -127,7 +130,7 @@ namespace Unipluss.Sign.StorageService.Server
                 var bytes = ms.ToArray();
                 if (Hash.GetSHA1(bytes).Equals(context.Request.Headers["filesha1"]))
                 {
-                    File.WriteAllBytes(string.Format(@"{0}\{1}", path, filename), bytes);
+                    Extensions.Retry<IOException>(() => File.WriteAllBytes(string.Format(@"{0}\{1}", path, filename), bytes), 5, 1000);
                     return true;
                 }
             }
@@ -145,7 +148,7 @@ namespace Unipluss.Sign.StorageService.Server
                 filteredMetaData.Add(metaKey.Replace("x-metadata-", string.Empty), metadata[metaKey]);
             }
             if (filteredMetaData.Count > 1)
-                Extensions.Serialize(filteredMetaData, string.Format(@"{0}\{1}.metadata", path, Path.GetFileName(filename).Replace(".", "_")));
+                Extensions.Retry<IOException>(() => Extensions.Serialize(filteredMetaData, string.Format(@"{0}\{1}.metadata", path, Path.GetFileName(filename).Replace(".", "_"))), 5, 1000);
 
             return filteredMetaData;
         }

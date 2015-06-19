@@ -10,13 +10,11 @@ namespace Unipluss.Sign.StorageService.Server
     {
         protected override void ServeContent(HttpContext context)
         {
-            base.LogDebugInfo("DeleteContainerHandler, ServeContent");
-
             if (AuthorizationHandler.VerifyIfRequestIsAuthed(context, true))
             {
                 var account = context.Request.QueryString["account"];
 
-                base.LogDebugInfo(string.Format("DeleteContainerHandler, RequestIsAuthed, account: {0}", account));
+                base.LogDebugInfo(string.Format("DeleteContainerHandler, account: {0}", account));
 
                 if (!AuthorizationHandler.CheckIfFolderNameIsInvalid(account))
                 {
@@ -24,7 +22,7 @@ namespace Unipluss.Sign.StorageService.Server
 
                     context.Response.Write("Not valid account");
                     context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-                    context.Response.End();
+                    context.ApplicationInstance.CompleteRequest();
                     return;
                 }
 
@@ -32,7 +30,8 @@ namespace Unipluss.Sign.StorageService.Server
                 {
                     var path = string.Format("{0}{1}", AppSettingsReader.RootFolder, account);
 
-                    base.LogDebugInfo(string.Format(@"DeleteContainerHandler, Deleting container: {0}{1}", AppSettingsReader.RootFolder, account));
+                    base.LogDebugInfo(string.Format(@"DeleteContainerHandler, Deleting container: {0}{1}",
+                        AppSettingsReader.RootFolder, account));
 
                     if (Directory.Exists(path))
                     {
@@ -54,7 +53,6 @@ namespace Unipluss.Sign.StorageService.Server
                         context.Response.Write("Container not found");
                         context.Response.StatusCode = (int)HttpStatusCode.NotFound;
                     }
-                    context.Response.End();
                 }
                 catch (ArgumentException e)
                 {
@@ -62,15 +60,15 @@ namespace Unipluss.Sign.StorageService.Server
 
                     context.Response.Write("Not valid containername");
                     context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-                    context.Response.End();
                 }
                 catch (System.IO.PathTooLongException e)
                 {
-                    base.LogError(context, e, "DeleteContainerHandler, PathTooLongException, Root path in config to long, must be less than 160 characters including length of the filenames that will be used");
+                    base.LogError(context, e,
+                        "DeleteContainerHandler, PathTooLongException, Root path in config to long, must be less than 160 characters including length of the filenames that will be used");
 
-                    context.Response.Write("Root path in config to long, must be less than 160 characters including length of the filenames that will be used");
+                    context.Response.Write(
+                        "Root path in config to long, must be less than 160 characters including length of the filenames that will be used");
                     context.Response.StatusCode = (int)HttpStatusCode.PreconditionFailed;
-                    context.Response.End();
                 }
                 catch (IOException e)
                 {
@@ -78,7 +76,6 @@ namespace Unipluss.Sign.StorageService.Server
 
                     base.WriteExceptionIfDebug(context, e);
                     context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-                    context.Response.End();
                 }
                 catch (Exception e)
                 {
@@ -86,7 +83,10 @@ namespace Unipluss.Sign.StorageService.Server
 
                     base.WriteExceptionIfDebug(context, e);
                     context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                    context.Response.End();
+                }
+                finally
+                {
+                    context.ApplicationInstance.CompleteRequest();
                 }
             }
         }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Web;
 using log4net;
 using Unipluss.Sign.StorageService.Server.Code;
@@ -45,13 +46,7 @@ namespace Unipluss.Sign.StorageService.Server
         
         protected void LogError(HttpContext context, Exception exception, string message)
         {
-            log.Error(
-                new
-                {
-                    Headers = context.Request.Headers,
-                    Url = context.Request.Url,
-                    message = message
-                }, exception);
+            log.Error(string.Format("Headers = {0}, Url = {1}, Message = {2}", context.Request.Headers, context.Request.Url, message), exception);
         }
 
         protected void LogDebugInfo(string message)
