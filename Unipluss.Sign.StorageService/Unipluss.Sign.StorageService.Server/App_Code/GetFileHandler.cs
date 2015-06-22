@@ -54,10 +54,14 @@ namespace Unipluss.Sign.StorageService.Server
                         context.Response.Cache.SetValidUntilExpires(true);
                         context.Response.Cache.VaryByParams["*"] = true;
 
-                        using (FileStream fs = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.Read))
+
+                        Extensions.Retry<IOException>(() =>
                         {
-                            fs.CopyTo(context.Response.OutputStream);
-                        }
+                            using (FileStream fs = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.Read))
+                            {
+                                fs.CopyTo(context.Response.OutputStream);
+                            }
+                        }, 5, 1500);
 
                         base.LogDebugInfo(string.Format(@"GetFileHandler, File {0} written to response", path));
 

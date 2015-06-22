@@ -12,7 +12,7 @@ namespace Unipluss.Sign.StorageService.Server
         {
             if (AuthorizationHandler.VerifyIfRequestIsAuthed(context, true))
             {
-                var account = context.Request.QueryString["account"];
+                var account = context.Request.QueryString["containername"];
 
                 base.LogDebugInfo(string.Format("DeleteContainerHandler, account: {0}", account));
 

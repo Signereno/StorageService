@@ -18,7 +18,7 @@ namespace Unipluss.Sign.StorageService.Test
 
         private IStorageServiceClient client;
         private string fileName1 = "timestamptest.pdf";
-        private string fileName1MB = "test.pdf";
+        private string fileName2 = "test.pdf";
 
         private NameValueCollection metadata = new NameValueCollection()
         {
@@ -60,7 +60,7 @@ namespace Unipluss.Sign.StorageService.Test
         [Test]
         public void UploadAndDownloadMultipleFilesTest()
         {
-            var data = File.ReadAllBytes(fileName1MB);
+            var data = File.ReadAllBytes(fileName2);
 
             var tasks = new List<Task>();
 
@@ -76,7 +76,6 @@ namespace Unipluss.Sign.StorageService.Test
                 // Do something
                 tasks.Add(Task.Factory.StartNew(() =>
                 {
-                    
                     var uploadresult = client.UploadFile(data, filename, metadata);
                     Assert.IsTrue(uploadresult);
 
