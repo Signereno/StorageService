@@ -37,8 +37,8 @@ namespace Unipluss.Sign.StorageService.Server
                     if (System.IO.Directory.Exists(path))
                     {
                         base.LogDebugInfo(string.Format("UploadFileHandler, Directory {0} exists", path));
-
-                        if (File.Exists(string.Format(@"{0}\{1}", path, filename)))
+                        bool fileExists = File.Exists(string.Format(@"{0}\{1}", path, filename));
+                        if (fileExists && Hash.GetSHA1(File.ReadAllBytes(string.Format(@"{0}\{1}", path, filename))).Equals(context.Request.Headers["filesha1"]))                            
                         {
                             base.LogDebugInfo(string.Format(@"UploadFileHandler, File {0}\{1} already exists, use unique filenames.", path, filename));
 
@@ -47,6 +47,12 @@ namespace Unipluss.Sign.StorageService.Server
                         }
                         else
                         {
+                            if (fileExists)
+                            {
+                                base.LogDebugInfo(string.Format(@"UploadFileHandler, Deleting existing file {0}\{1} beacause not SHA do not match.", path, filename));
+                                File.Delete(path);
+                            }
+
                             if (SaveFile(context, path, filename))
                             {
                                 base.LogDebugInfo(string.Format(@"UploadFileHandler, File {0}\{1} saved", path, filename));
