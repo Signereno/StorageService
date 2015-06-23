@@ -37,26 +37,36 @@ namespace Unipluss.Sign.StorageService.Client
             request.ContentLength = 0;
             try
             {
-            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-
-            if (response.StatusCode == HttpStatusCode.Created )
-            {
-                using (Stream stream = response.GetResponseStream())
+                using (HttpWebResponse response = (HttpWebResponse) request.GetResponse())
                 {
-                    StreamReader reader = new StreamReader(stream, Encoding.UTF8);
-                    return reader.ReadToEnd();
+
+                    if (response.StatusCode == HttpStatusCode.Created)
+                    {
+                        using (Stream stream = response.GetResponseStream())
+                        {
+                            using (StreamReader reader = new StreamReader(stream, Encoding.UTF8))
+                            {
+                                return reader.ReadToEnd();
+                            }
+                        }
+                    }
                 }
-            }
             }
             catch (System.Net.WebException ex)
             {
-                HttpWebResponse res = (HttpWebResponse)ex.Response;
-                using (Stream stream = res.GetResponseStream())
+                using (HttpWebResponse res = (HttpWebResponse) ex.Response)
                 {
-                    StreamReader reader = new StreamReader(stream, Encoding.UTF8);
-                    throw new Exception(string.Format("Statuscode: {0} - {1}", res.StatusCode, reader.ReadToEnd()));
+                    using (Stream stream = res.GetResponseStream())
+                    {
+                        using (StreamReader reader = new StreamReader(stream, Encoding.UTF8))
+                        {
+                            throw new Exception(string.Format("Statuscode: {0} - {1}", res.StatusCode, reader.ReadToEnd()));    
+                        }
+                        
+                        
+                    }
                 }
-               
+
             }
 
 
@@ -72,17 +82,21 @@ namespace Unipluss.Sign.StorageService.Client
             // Get the response.
             try
             {
-                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-                return response.StatusCode == HttpStatusCode.OK;
+                using (HttpWebResponse response = (HttpWebResponse) request.GetResponse())
+                {
+                    return response.StatusCode == HttpStatusCode.OK;
+                }
             }
             catch (System.Net.WebException ex)
             {
-                HttpWebResponse res = (HttpWebResponse) ex.Response;
-                if (res.StatusCode == HttpStatusCode.NotFound)
-                    return false;
-                else
+                using (HttpWebResponse res = (HttpWebResponse) ex.Response)
                 {
-                    throw ex;
+                    if (res.StatusCode == HttpStatusCode.NotFound)
+                        return false;
+                    else
+                    {
+                        throw ex;
+                    }
                 }
             }
 
@@ -100,22 +114,25 @@ namespace Unipluss.Sign.StorageService.Client
             request.ContentLength = 0;
             try
             {
-                HttpWebResponse response = (HttpWebResponse) request.GetResponse();
-
-                if (response.StatusCode == HttpStatusCode.OK)
+                using (HttpWebResponse response = (HttpWebResponse) request.GetResponse())
                 {
-                    using (Stream stream = response.GetResponseStream())
+                    if (response.StatusCode == HttpStatusCode.OK)
                     {
-                        StreamReader reader = new StreamReader(stream, Encoding.UTF8);
-                        return reader.ReadToEnd();
+                        using (Stream stream = response.GetResponseStream())
+                        {
+                            StreamReader reader = new StreamReader(stream, Encoding.UTF8);
+                            return reader.ReadToEnd();
+                        }
                     }
                 }
 
             }
             catch (System.Net.WebException ex)
             {
-                HttpWebResponse res = (HttpWebResponse)ex.Response;
-                throw new Exception(string.Format("Statuscode: {0} - {1}",res.StatusCode,res.StatusDescription));
+                using (HttpWebResponse res = (HttpWebResponse) ex.Response)
+                {
+                    throw new Exception(string.Format("Statuscode: {0} - {1}", res.StatusCode, res.StatusDescription));
+                }
             }
 
 
@@ -132,24 +149,28 @@ namespace Unipluss.Sign.StorageService.Client
             request.ContentLength = 0;
             try
             {
-                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-
-                if (response.StatusCode == HttpStatusCode.OK)
+                using (HttpWebResponse response = (HttpWebResponse) request.GetResponse())
                 {
-                    var retur = new NameValueCollection();
-                    foreach (string key in response.Headers.AllKeys.Where(x => x.StartsWith("x-metadata-")))
+
+                    if (response.StatusCode == HttpStatusCode.OK)
                     {
-                        var value = response.Headers[key];
-                        retur.Add(key.Replace("x-metadata-", string.Empty), value);
+                        var retur = new NameValueCollection();
+                        foreach (string key in response.Headers.AllKeys.Where(x => x.StartsWith("x-metadata-")))
+                        {
+                            var value = response.Headers[key];
+                            retur.Add(key.Replace("x-metadata-", string.Empty), value);
+                        }
+                        return retur;
                     }
-                    return retur;
                 }
 
             }
             catch (System.Net.WebException ex)
             {
-                HttpWebResponse res = (HttpWebResponse)ex.Response;
-                throw new Exception(string.Format("Statuscode: {0} - {1}", res.StatusCode, res.StatusDescription));
+                using (HttpWebResponse res = (HttpWebResponse) ex.Response)
+                {
+                    throw new Exception(string.Format("Statuscode: {0} - {1}", res.StatusCode, res.StatusDescription));
+                }
             }
 
 
@@ -162,18 +183,21 @@ namespace Unipluss.Sign.StorageService.Client
             WebRequest request = base.CreateGetRequest(url);
             try
             {
-                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-
-                return response.StatusCode == HttpStatusCode.OK;
+                using (HttpWebResponse response = (HttpWebResponse) request.GetResponse())
+                {
+                    return response.StatusCode == HttpStatusCode.OK;
+                }
             }
             catch (System.Net.WebException ex)
             {
-                HttpWebResponse res = (HttpWebResponse)ex.Response;
-                if (res.StatusCode == HttpStatusCode.NotFound)
-                    return false;
-                else
+                using (HttpWebResponse res = (HttpWebResponse) ex.Response)
                 {
-                    throw ex;
+                    if (res.StatusCode == HttpStatusCode.NotFound)
+                        return false;
+                    else
+                    {
+                        throw ex;
+                    }
                 }
             }
 
@@ -186,20 +210,23 @@ namespace Unipluss.Sign.StorageService.Client
 
             WebRequest request = base.CreateDeleteRequest(url);
             // If required by the server, set the credentials.
-            // Get the response.
-
+            // Get the response.            
             request.ContentLength = 0;
             try
             {
-                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-
-                return response.StatusCode == HttpStatusCode.OK;
+                using (HttpWebResponse response = (HttpWebResponse) request.GetResponse())
+                {
+                    return response.StatusCode == HttpStatusCode.OK;
+                }
+                
              
             }
             catch (System.Net.WebException ex)
             {
-                HttpWebResponse res = (HttpWebResponse)ex.Response;
-                throw new Exception(string.Format("Statuscode: {0} - {1}", res.StatusCode, res.StatusDescription));
+                using (HttpWebResponse res = (HttpWebResponse) ex.Response)
+                {
+                    throw new Exception(string.Format("Statuscode: {0} - {1}", res.StatusCode, res.StatusDescription));
+                }
             }
 
             return false;
