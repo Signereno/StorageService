@@ -43,11 +43,13 @@ namespace Unipluss.Sign.StorageService.Client
                     request.Headers.Add(string.Format("x-metadata-{0}", key), value);
                 }
             }
-
-
-            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-
-            return response.StatusCode == HttpStatusCode.Created;
+            
+            using (HttpWebResponse response = (HttpWebResponse) request.GetResponse())
+            {
+                return response.StatusCode == HttpStatusCode.Created;    
+            }
+            
+            
         }
 
         public bool UploadFile(string filepath, NameValueCollection metaData)
@@ -61,18 +63,21 @@ namespace Unipluss.Sign.StorageService.Client
             WebRequest request = base.CreateGetRequest(url);
             try
             {
-                HttpWebResponse response = (HttpWebResponse) request.GetResponse();
-
-                return response.StatusCode == HttpStatusCode.OK;
+                using (HttpWebResponse response = (HttpWebResponse) request.GetResponse())
+                {
+                    return response.StatusCode == HttpStatusCode.OK;
+                }
             }
             catch (System.Net.WebException ex)
             {
-                HttpWebResponse res = (HttpWebResponse) ex.Response;
-                if (res.StatusCode == HttpStatusCode.NotFound)
-                    return false;
-                else
+                using (HttpWebResponse res = (HttpWebResponse) ex.Response)
                 {
-                    throw ex;
+                    if (res.StatusCode == HttpStatusCode.NotFound)
+                        return false;
+                    else
+                    {
+                        throw ex;
+                    }
                 }
             }
 
@@ -85,18 +90,23 @@ namespace Unipluss.Sign.StorageService.Client
             WebRequest request = base.CreateDeleteRequest(url);
             try
             {
-                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                using (HttpWebResponse response = (HttpWebResponse) request.GetResponse())
+                {
+                    return response.StatusCode == HttpStatusCode.OK;
+                }
 
-                return response.StatusCode == HttpStatusCode.OK;
+                
             }
             catch (System.Net.WebException ex)
             {
-                HttpWebResponse res = (HttpWebResponse)ex.Response;
-                if (res.StatusCode == HttpStatusCode.NotFound)
-                    return false;
-                else
+                using (HttpWebResponse res = (HttpWebResponse) ex.Response)
                 {
-                    throw ex;
+                    if (res.StatusCode == HttpStatusCode.NotFound)
+                        return false;
+                    else
+                    {
+                        throw ex;
+                    }
                 }
             }
 
@@ -110,39 +120,43 @@ namespace Unipluss.Sign.StorageService.Client
             
             try
             {
-                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse()) {
 
-                if (response.StatusCode == HttpStatusCode.OK)
-                {
-                    var retur=new FileResponse(){MetaData = new NameValueCollection()};
-                    using (Stream stream = response.GetResponseStream())
+                    if (response.StatusCode == HttpStatusCode.OK)
                     {
-                        using (var ms = new MemoryStream())
+                        var retur = new FileResponse() {MetaData = new NameValueCollection()};                        
+                        using (Stream stream = response.GetResponseStream())
                         {
-                            stream.CopyTo(ms);
-                            retur.Bytes = ms.ToArray();
-
-                            foreach (string key in response.Headers.AllKeys.Where(x=>x.StartsWith("x-metadata-")))
+                            using (var ms = new MemoryStream())
                             {
-                                var value = response.Headers[key];
-                                retur.MetaData.Add(key.Replace("x-metadata-",string.Empty),value);
-                            }
-                            retur.FileName = response.Headers["x-response-filename"];
-                            return retur;
+                                stream.CopyTo(ms);
+                                retur.Bytes = ms.ToArray();
 
+                                foreach (string key in response.Headers.AllKeys.Where(x => x.StartsWith("x-metadata-")))
+                                {
+                                    var value = response.Headers[key];
+                                    retur.MetaData.Add(key.Replace("x-metadata-", string.Empty), value);
+                                }
+                                retur.FileName = response.Headers["x-response-filename"];
+                                return retur;
+
+                            }
                         }
                     }
-            }
+                }
             }
            catch (System.Net.WebException ex)
            {
-               HttpWebResponse res = (HttpWebResponse)ex.Response;
-               if (res.StatusCode == HttpStatusCode.NotFound)
-                   return null;
-               else
+               using (HttpWebResponse res = (HttpWebResponse) ex.Response)
                {
-                   throw ex;
+                   if (res.StatusCode == HttpStatusCode.NotFound)
+                       return null;
+                   else
+                   {
+                       throw ex;
+                   } 
                }
+              
            }
 
             return null;
@@ -154,19 +168,23 @@ namespace Unipluss.Sign.StorageService.Client
             WebRequest request = base.CreateGetRequest(url);
             try
             {
-                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-
-                return response.StatusCode == HttpStatusCode.OK;
+                using (HttpWebResponse response = (HttpWebResponse) request.GetResponse())
+                {
+                    return response.StatusCode == HttpStatusCode.OK;
+                }
+                
             }
             catch (System.Net.WebException ex)
             {
-                HttpWebResponse res = (HttpWebResponse)ex.Response;
-                if (res.StatusCode == HttpStatusCode.NotFound)
-                    return false;
-                else
+                using (HttpWebResponse res = (HttpWebResponse) ex.Response)
                 {
-                    throw ex;
-                }
+                    if (res.StatusCode == HttpStatusCode.NotFound)
+                        return false;
+                    else
+                    {
+                        throw ex;
+                    } 
+                }              
             }
 
             return false;
