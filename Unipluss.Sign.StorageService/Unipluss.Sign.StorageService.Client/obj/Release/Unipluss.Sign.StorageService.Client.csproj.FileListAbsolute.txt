@@ -6,3 +6,4 @@ D:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.
 D:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.Client\bin\Release\Unipluss.Sign.StorageService.Client.pdb
 D:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.Client\obj\Release\Unipluss.Sign.StorageService.Client.dll
 D:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.Client\obj\Release\Unipluss.Sign.StorageService.Client.pdb
+C:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.Client\obj\Release\Unipluss.Sign.StorageService.Client.csprojResolveAssemblyReference.cache

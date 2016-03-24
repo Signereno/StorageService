@@ -16,6 +16,14 @@ namespace Unipluss.Sign.StorageService.Server.Code
             }
         }
 
+        public static string MoveToFolder
+        {
+            get
+            {
+                return ConfigurationManager.AppSettings["MoveToFolder"] != null ? EnsureLastSlash(ConfigurationManager.AppSettings["MoveToFolder"]) : null;
+            }
+        }
+        
         public static string UrlToken
         {
             get

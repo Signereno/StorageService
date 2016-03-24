@@ -34,3 +34,7 @@ D:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.
 D:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.Test\bin\Release\log4net.xml
 D:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.Test\bin\Release\test.pdf
 D:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.Test\bin\Release\DUMMYDOCUMENT.pdf
+C:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.Test\bin\Release\DUMMYDOCUMENT.pdf
+C:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.Test\bin\Release\test.pdf
+C:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.Test\bin\Release\log4net.dll
+C:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.Test\bin\Release\log4net.xml

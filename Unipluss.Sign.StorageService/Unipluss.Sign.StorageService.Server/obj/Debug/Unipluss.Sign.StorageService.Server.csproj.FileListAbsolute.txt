@@ -1,7 +1,3 @@
-C:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.Server\bin\Debug\Unipluss.Sign.StorageService.Server.dll
-C:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.Server\bin\Debug\Unipluss.Sign.StorageService.Server.pdb
-C:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.Server\bin\Debug\Newtonsoft.Json.dll
-C:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.Server\bin\Debug\Newtonsoft.Json.xml
 C:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.Server\obj\Debug\Unipluss.Sign.StorageService.Server.dll
 C:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.Server\obj\Debug\Unipluss.Sign.StorageService.Server.pdb
 C:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.Server\obj\Debug\Unipluss.Sign.StorageService.Server.csprojResolveAssemblyReference.cache
@@ -14,3 +10,9 @@ D:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.
 D:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.Server\bin\log4net.dll
 D:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.Server\bin\log4net.xml
 D:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.Server\obj\Debug\Unipluss.Sign.StorageService.Server.csprojResolveAssemblyReference.cache
+C:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.Server\bin\Unipluss.Sign.StorageService.Server.dll
+C:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.Server\bin\Unipluss.Sign.StorageService.Server.pdb
+C:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.Server\bin\log4net.dll
+C:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.Server\bin\Newtonsoft.Json.dll
+C:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.Server\bin\log4net.xml
+C:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.Server\bin\Newtonsoft.Json.xml

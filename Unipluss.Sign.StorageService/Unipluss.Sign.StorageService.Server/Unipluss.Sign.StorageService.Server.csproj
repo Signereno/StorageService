@@ -61,9 +61,12 @@
     <Compile Include="App_Code\DoesContainerExistHandler.cs" />
     <Compile Include="App_Code\GetContainerKeyHandler.cs" />
     <Compile Include="App_Code\Code\AuthorizationHandler.cs" />
+    <Compile Include="Global.asax.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Global.asax" />
+  </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="web.config" />
