@@ -17,5 +17,11 @@ namespace Unipluss.Sign.StorageService.Server
             //.UseActivator(...)
             //.UseLogProvider(...)
         }
+
+        protected void Application_End()
+        {
+            if (BaseAsyncHandler.encryption!=null)
+             BaseAsyncHandler.encryption.Dispose();
+        }
     }
 }

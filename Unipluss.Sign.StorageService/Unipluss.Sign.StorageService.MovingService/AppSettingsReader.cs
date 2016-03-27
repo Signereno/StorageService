@@ -12,7 +12,8 @@ namespace Unipluss.Sign.StorageService.MovingService
 
         public static int MinutesBeforeMovingFiles => ConfigurationManager.AppSettings["MinutesBeforeMovingFiles"].ParseInt(60);
 
-        
+        public static string CertificateThumbprint => ConfigurationManager.AppSettings["CertificateThumbprint"];
+
     }
 
    

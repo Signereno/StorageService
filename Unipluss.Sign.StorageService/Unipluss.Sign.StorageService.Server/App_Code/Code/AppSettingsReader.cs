@@ -17,6 +17,9 @@ namespace Unipluss.Sign.StorageService.Server.Code
             }
         }
 
+        public static string CertificateThumbprint => ConfigurationManager.AppSettings["CertificateThumbprint"];
+
+
         public static string MoveToFolder
         {
             get { return ConfigurationManager.AppSettings["MoveToFolder"].EnsureLastSlashInWindowsPath(); }

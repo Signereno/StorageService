@@ -62,8 +62,20 @@ namespace Unipluss.Sign.StorageService.Server
                         {
                             using (FileStream fs = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.Read))
                             {
-                                fs.CopyTo(context.Response.OutputStream);
+                                if (!string.IsNullOrWhiteSpace(AppSettingsReader.CertificateThumbprint))
+                                {
+                                    using (var ms = new MemoryStream())
+                                    {
+                                        fs.CopyTo(ms);
+                                        context.Response.BinaryWrite(encryption.DecryptFile(ms.ToArray()));
+                                    }
+                                }
+                                else
+                                {
+                                    fs.CopyTo(context.Response.OutputStream);
+                                }
                             }
+                           
                         }, 5, 1500);
 
                         base.LogDebugInfo(string.Format(@"GetFileHandler, File {0} written to response", path));

@@ -1,6 +1,8 @@
 ﻿using System;
-using System.IO;
+using System.Reflection;
+using System.Security.Cryptography.X509Certificates;
 using System.Web;
+using dotnet.common.encryption;
 using log4net;
 using Unipluss.Sign.StorageService.Server.Code;
 
@@ -8,8 +10,18 @@ namespace Unipluss.Sign.StorageService.Server
 {
     public abstract class BaseAsyncHandler : IHttpAsyncHandler
     {
-        private static ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        public static IEncryption encryption;
 
+
+        public BaseAsyncHandler()
+        {
+            if (encryption == null && !string.IsNullOrWhiteSpace(AppSettingsReader.CertificateThumbprint))
+            {
+                encryption=new CertificateEncryptionService(AppSettingsReader.CertificateThumbprint,StoreName.My,StoreLocation.CurrentUser);
+            }
+
+        }
         protected abstract void ServeContent(HttpContext context);
         public void ProcessRequest(HttpContext context)
         {

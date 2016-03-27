@@ -137,8 +137,11 @@ namespace Unipluss.Sign.StorageService.Server
             {
                 context.Request.InputStream.CopyTo(ms);
                 var bytes = ms.ToArray();
+
                 if (bytes.ToSha1(HashFormat.HEX).Equals(context.Request.Headers["filesha1"]))
                 {
+                    if (!string.IsNullOrWhiteSpace(AppSettingsReader.CertificateThumbprint))
+                        bytes = encryption.EncryptFile(bytes);
                     CommonHelper.Retry<IOException>(() => File.WriteAllBytes(string.Format(@"{0}\{1}", path, filename), bytes), 5, 1000);
                     return true;
                 }
