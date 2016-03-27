@@ -30,6 +30,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="dotnet.common">
+      <HintPath>..\References\dotnet.common.dll</HintPath>
+    </Reference>
     <Reference Include="log4net">
       <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
     </Reference>
@@ -40,15 +43,14 @@
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data.Linq" />
     <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Code\BaseAsyncHandler.cs" />
     <Compile Include="App_Code\Code\AppSettingsReader.cs" />
-    <Compile Include="App_Code\Code\Extensions.cs" />
-    <Compile Include="App_Code\Code\Hash.cs" />
-    <Compile Include="App_Code\Code\MimeAssistant.cs" />
-    <Compile Include="App_Code\Code\RandomStringGenerator.cs" />
+    <Compile Include="App_Code\Code\SerializeExtensions.cs" />
     <Compile Include="App_Code\CreateContainerHandler.cs" />
     <Compile Include="App_Code\DeleteContainerHandler.cs" />
     <Compile Include="App_Code\DeleteFileHandler.cs" />

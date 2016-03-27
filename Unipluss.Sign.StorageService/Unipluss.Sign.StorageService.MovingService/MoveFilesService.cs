@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using dotnet.common.files;
 using Quartz;
 using Quartz.Impl;
 using Serilog;
@@ -72,13 +73,16 @@ namespace Unipluss.Sign.StorageService.MovingService
             var filename = string.Format("*{0}*", e.Name.ToLowerInvariant().Replace("_signerepades.pdf", ""));
             Log.Logger.Debug("Created event fired for {0}", filename);
 
-            var files = Directory.GetFiles(Path.GetDirectoryName(e.FullPath), filename);
+            //var files = Directory.GetFiles(Path.GetDirectoryName(e.FullPath), filename);
+
+            var files = Path.GetDirectoryName(e.FullPath).GetFilesInFolder(filename);
+
             foreach (var file in files)
             {
-                if (File.Exists(file))
+                if (file.Exists)
                 {
-                    var sourcePath = Path.Combine(AppSettingsReader.MoveToFolder, Path.GetFileName(file));
-                    File.Move(file, sourcePath);
+                    var sourcePath = Path.Combine(AppSettingsReader.MoveToFolder, Path.GetFileName(file.Name));
+                    file.MoveTo(sourcePath);
                     Log.Logger.Debug("Moving file: {0} to {1}", file, sourcePath);
                 }
             }

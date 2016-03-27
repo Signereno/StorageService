@@ -4,6 +4,7 @@ using System.IO;
 using System.Net;
 using System.Text;
 using System.Web;
+using dotnet.common.hash;
 
 namespace Unipluss.Sign.StorageService.Server.Code
 {
@@ -53,7 +54,8 @@ namespace Unipluss.Sign.StorageService.Server.Code
             }
 
             //If security token is correct
-            if (string.IsNullOrWhiteSpace(token) || !token.Equals(Unipluss.Sign.StorageService.Server.Code.Hash.GetHash(tohash, AppSettingsReader.UrlToken, HashType.SHA512, new UTF8Encoding())))
+            if (string.IsNullOrWhiteSpace(token) ||
+                !token.Equals(tohash.ToHmacSha512(AppSettingsReader.UrlToken, HashFormat.HEX, new UTF8Encoding())))
             {
                 context.Response.Write("Non authorized request");
                 context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;

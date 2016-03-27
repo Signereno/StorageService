@@ -1,5 +1,9 @@
+C:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.MovingService\bin\Debug\Signere-StorageServer-FileMover.exe.config
+C:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.MovingService\bin\Debug\Signere-StorageServer-FileMover.exe
+C:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.MovingService\bin\Debug\Signere-StorageServer-FileMover.pdb
 C:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.MovingService\bin\Debug\Common.Logging.Core.dll
 C:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.MovingService\bin\Debug\Common.Logging.dll
+C:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.MovingService\bin\Debug\dotnet.common.dll
 C:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.MovingService\bin\Debug\Quartz.dll
 C:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.MovingService\bin\Debug\Serilog.dll
 C:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.MovingService\bin\Debug\Serilog.FullNetFx.dll
@@ -15,8 +19,6 @@ C:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.
 C:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.MovingService\bin\Debug\Serilog.xml
 C:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.MovingService\bin\Debug\Serilog.FullNetFx.pdb
 C:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.MovingService\bin\Debug\Serilog.FullNetFx.xml
-C:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.MovingService\bin\Debug\Signere-StorageServer-FileMover.exe.config
-C:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.MovingService\bin\Debug\Signere-StorageServer-FileMover.exe
-C:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.MovingService\bin\Debug\Signere-StorageServer-FileMover.pdb
+C:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.MovingService\obj\Debug\Unipluss.Sign.StorageService.MovingService.csprojResolveAssemblyReference.cache
 C:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.MovingService\obj\Debug\Signere-StorageServer-FileMover.exe
 C:\git\StorageService\Unipluss.Sign.StorageService\Unipluss.Sign.StorageService.MovingService\obj\Debug\Signere-StorageServer-FileMover.pdb

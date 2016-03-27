@@ -89,7 +89,7 @@ namespace Unipluss.Sign.StorageService.Server
             if (!File.Exists(metapath))
                 return new NameValueCollection();
 
-            var metadata = Extensions.DeSerialize(metapath);
+            var metadata = SerializeExtensions.DeSerialize(metapath);
             foreach (string headerKey in metadata)
             {
                 context.Response.Headers.Add(string.Format("x-metadata-{0}", headerKey), metadata[headerKey]);

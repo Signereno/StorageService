@@ -4,7 +4,10 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
+using dotnet.common;
 using Unipluss.Sign.StorageService.Server.Code;
+using dotnet.common.files;
+using dotnet.common.misc;
 
 namespace Unipluss.Sign.StorageService.Server
 {
@@ -54,8 +57,8 @@ namespace Unipluss.Sign.StorageService.Server
                         context.Response.Cache.SetValidUntilExpires(true);
                         context.Response.Cache.VaryByParams["*"] = true;
 
-
-                        Extensions.Retry<IOException>(() =>
+                       
+                        CommonHelper.Retry<IOException>(() =>
                         {
                             using (FileStream fs = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.Read))
                             {
@@ -65,7 +68,7 @@ namespace Unipluss.Sign.StorageService.Server
 
                         base.LogDebugInfo(string.Format(@"GetFileHandler, File {0} written to response", path));
 
-                        context.Response.Headers.Add("Content-Type", MimeAssistant.GetMIMEType(filename));
+                        context.Response.Headers.Add("Content-Type",filename.GetMIMEType());
                         context.Response.Headers.Add("Content-Disposition", string.Format("attachment; filename=\"{0}\"", filename));
                         context.Response.Headers.Add("Content-Length", new System.IO.FileInfo(path).Length.ToString());
                     }
@@ -138,7 +141,7 @@ namespace Unipluss.Sign.StorageService.Server
             if (!File.Exists(metapath)) 
                 return new NameValueCollection();
 
-            var metadata = Extensions.DeSerialize(metapath);
+            var metadata = SerializeExtensions.DeSerialize(metapath);
             foreach (string headerKey in metadata)
             {
                 context.Response.Headers.Add(string.Format("x-metadata-{0}", headerKey), metadata[headerKey]);

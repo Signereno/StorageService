@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Runtime.Serialization;
+using dotnet.common.files;
 
 namespace Unipluss.Sign.StorageService.Server.Code
 {
@@ -12,50 +13,31 @@ namespace Unipluss.Sign.StorageService.Server.Code
         {
             get
             {
-                return ConfigurationManager.AppSettings["rootfolder"] != null ? EnsureLastSlash(ConfigurationManager.AppSettings["rootfolder"]) : null;
+                return ConfigurationManager.AppSettings["rootfolder"].EnsureLastSlashInWindowsPath();
             }
         }
 
         public static string MoveToFolder
         {
-            get
-            {
-                return ConfigurationManager.AppSettings["MoveToFolder"] != null ? EnsureLastSlash(ConfigurationManager.AppSettings["MoveToFolder"]) : null;
-            }
+            get { return ConfigurationManager.AppSettings["MoveToFolder"].EnsureLastSlashInWindowsPath(); }
         }
-        
+
         public static string UrlToken
         {
-            get
-            {
-                return ConfigurationManager.AppSettings["urltoken"];
-            }
+            get { return ConfigurationManager.AppSettings["urltoken"]; }
         }
 
         public static string AdminKey
         {
-            get
-            {
-                return ConfigurationManager.AppSettings["adminkey"];
-            }
+            get { return ConfigurationManager.AppSettings["adminkey"]; }
         }
 
         public static bool Debug
         {
-            get
-            {
-                return Boolean.Parse( ConfigurationManager.AppSettings["debug"]);
-            }
+            get { return Boolean.Parse(ConfigurationManager.AppSettings["debug"]); }
         }
 
 
-        public static string EnsureLastSlash(this string path)
-        {
-            if (!path.EndsWith("\\"))
-                path += "\\";
-            return path;
-        }
     }
 
-   
 }

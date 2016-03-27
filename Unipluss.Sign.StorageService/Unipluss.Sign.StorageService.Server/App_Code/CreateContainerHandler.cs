@@ -28,7 +28,8 @@ namespace Unipluss.Sign.StorageService.Server
                     return;
                 }
 
-                string key = RandomStringGenerator.GetRandomString(100);
+                string key = dotnet.common.security.RandomStringGenerator.GenerateRandomString(100,
+                    dotnet.common.security.RandomStringGenerator.Characters.ALFANUMERIC_UPPERCASE);
 
                 try
                 {
@@ -93,7 +94,7 @@ namespace Unipluss.Sign.StorageService.Server
                 filteredMetaData.Add(metaKey.Replace("x-metadata-", string.Empty), metadata[metaKey]);
             }
             if (filteredMetaData.Count > 1)
-                Extensions.Serialize(filteredMetaData, string.Format(@"{0}{1}\container.metadata", AppSettingsReader.RootFolder, account));
+                SerializeExtensions.Serialize(filteredMetaData, string.Format(@"{0}{1}\container.metadata", AppSettingsReader.RootFolder, account));
 
             return filteredMetaData;
         }

@@ -4,6 +4,9 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
+using dotnet.common;
+using dotnet.common.hash;
+using dotnet.common.misc;
 using Unipluss.Sign.StorageService.Server.Code;
 
 namespace Unipluss.Sign.StorageService.Server
@@ -38,7 +41,7 @@ namespace Unipluss.Sign.StorageService.Server
                     {
                         base.LogDebugInfo(string.Format("UploadFileHandler, Directory {0} exists", path));
                         bool fileExists = File.Exists(string.Format(@"{0}\{1}", path, filename));
-                        if (fileExists && Hash.GetSHA1(File.ReadAllBytes(string.Format(@"{0}\{1}", path, filename))).Equals(context.Request.Headers["filesha1"]))                            
+                        if (fileExists && File.ReadAllBytes(string.Format(@"{0}\{1}", path, filename)).ToSha1(HashFormat.HEX).Equals(context.Request.Headers["filesha1"]))                            
                         {
                             base.LogDebugInfo(string.Format(@"UploadFileHandler, File {0}\{1} already exists, use unique filenames.", path, filename));
 
@@ -134,9 +137,9 @@ namespace Unipluss.Sign.StorageService.Server
             {
                 context.Request.InputStream.CopyTo(ms);
                 var bytes = ms.ToArray();
-                if (Hash.GetSHA1(bytes).Equals(context.Request.Headers["filesha1"]))
+                if (bytes.ToSha1(HashFormat.HEX).Equals(context.Request.Headers["filesha1"]))
                 {
-                    Extensions.Retry<IOException>(() => File.WriteAllBytes(string.Format(@"{0}\{1}", path, filename), bytes), 5, 1000);
+                    CommonHelper.Retry<IOException>(() => File.WriteAllBytes(string.Format(@"{0}\{1}", path, filename), bytes), 5, 1000);
                     return true;
                 }
             }
@@ -154,7 +157,7 @@ namespace Unipluss.Sign.StorageService.Server
                 filteredMetaData.Add(metaKey.Replace("x-metadata-", string.Empty), metadata[metaKey]);
             }
             if (filteredMetaData.Count > 1)
-                Extensions.Retry<IOException>(() => Extensions.Serialize(filteredMetaData, string.Format(@"{0}\{1}.metadata", path, Path.GetFileName(filename).Replace(".", "_"))), 5, 1000);
+                CommonHelper.Retry<IOException>(() => SerializeExtensions.Serialize(filteredMetaData, string.Format(@"{0}\{1}.metadata", path, Path.GetFileName(filename).Replace(".", "_"))), 5, 1000);
 
             return filteredMetaData;
         }
